@@ -73,7 +73,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 <nav>
   <a href="summer-school-en.html" class="back">← the programme</a>
   <a href="#dati">your details</a>
-  <a href="#candidatura">your application</a>
   <a href="#consensi">consents</a>
 </nav>
 
@@ -153,48 +152,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
     </section>
 
-    <section id="candidatura">
-      <h2>your application</h2>
-
-      <div class="field">
-        <label>Background / field <span class="req">*</span></label>
-        <select id="ambito">
-          <option value="">— select —</option>
-          <option>Architecture</option>
-          <option>Design</option>
-          <option>Visual arts</option>
-          <option>Music</option>
-          <option>Communication</option>
-          <option>Cultural studies</option>
-          <option>Other</option>
-        </select>
-        <div class="err">Please select an option.</div>
-      </div>
-
-      <div class="field">
-        <label>Current school, university or qualification</label>
-        <input type="text" id="scuola">
-      </div>
-
-      <div class="field">
-        <label>Motivation letter <span class="req">*</span></label>
-        <textarea id="motivazione" placeholder="Why do you want to take part?"></textarea>
-        <div class="err">Required field.</div>
-      </div>
-
-      <div class="field">
-        <label>Link to your portfolio or a personal project <span class="req">*</span></label>
-        <input type="url" id="portfolio" placeholder="https://…">
-        <div class="hint">A link (website, Drive, Behance…). You can also attach files directly to the email that opens.</div>
-        <div class="err">Enter a valid link.</div>
-      </div>
-
-      <div class="consent">
-        <input type="checkbox" id="borsa">
-        <label for="borsa">I would like to apply for a <strong>scholarship</strong> or reduced-fee place.</label>
-      </div>
-    </section>
-
     <section id="consensi">
       <h2>consents</h2>
 
@@ -244,19 +201,17 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     if(field) field.classList.toggle("invalid", on);
   }
   function emailValida(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-  function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
 
   form.addEventListener("submit", e => {
     e.preventDefault();
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese","ambito","motivazione","portfolio"];
+    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
       if(id === "email") invalido = !emailValida(v(id));
-      if(id === "portfolio") invalido = !urlValido(v(id));
       segnaErrore(id, invalido);
       if(invalido) ok = false;
     });
@@ -286,15 +241,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       "Email: " + v("email"),
       "Phone: " + v("telefono"),
       "Address: " + v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
-      "",
-      "— APPLICATION —",
-      "Field: " + v("ambito"),
-      "School/qualification: " + v("scuola"),
-      "Portfolio: " + v("portfolio"),
-      "Scholarship requested: " + (document.getElementById("borsa").checked ? "yes" : "no"),
-      "",
-      "Motivation letter:",
-      v("motivazione"),
       "",
       "— CONSENTS —",
       "Privacy (GDPR): accepted",

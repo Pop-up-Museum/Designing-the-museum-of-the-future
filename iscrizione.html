@@ -74,7 +74,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 <nav>
   <a href="summer-school.html" class="back">← il programma</a>
   <a href="#dati">i tuoi dati</a>
-  <a href="#candidatura">la candidatura</a>
   <a href="#consensi">consensi</a>
 </nav>
 
@@ -154,48 +153,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
     </section>
 
-    <section id="candidatura">
-      <h2>la candidatura</h2>
-
-      <div class="field">
-        <label>Formazione / ambito <span class="req">*</span></label>
-        <select id="ambito">
-          <option value="">— seleziona —</option>
-          <option>Architettura</option>
-          <option>Design</option>
-          <option>Arti visive</option>
-          <option>Musica</option>
-          <option>Comunicazione</option>
-          <option>Studi culturali</option>
-          <option>Altro</option>
-        </select>
-        <div class="err">Seleziona un'opzione.</div>
-      </div>
-
-      <div class="field">
-        <label>Scuola, università o titolo attuale</label>
-        <input type="text" id="scuola">
-      </div>
-
-      <div class="field">
-        <label>Lettera motivazionale <span class="req">*</span></label>
-        <textarea id="motivazione" placeholder="Perché vuoi partecipare?"></textarea>
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-
-      <div class="field">
-        <label>Link al portfolio o a un progetto personale <span class="req">*</span></label>
-        <input type="url" id="portfolio" placeholder="https://…">
-        <div class="hint">Un link (sito, Drive, Behance…). Potrai allegare file direttamente all'email che si aprirà.</div>
-        <div class="err">Inserisci un link valido.</div>
-      </div>
-
-      <div class="consent">
-        <input type="checkbox" id="borsa">
-        <label for="borsa">Desidero candidarmi per una <strong>borsa di studio</strong> o una tariffa ridotta.</label>
-      </div>
-    </section>
-
     <section id="consensi">
       <h2>consensi</h2>
 
@@ -240,7 +197,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
      registrandoti con c.luca2002@gmail.com — la chiave arriva in quella
      casella). Le candidature verranno inviate alla mail legata alla key.
      ==================================================================== */
-  const ACCESS_KEY = "LA-TUA-ACCESS-KEY";
+  const ACCESS_KEY = "614955a3-cafc-496e-a83a-323313cfeaaf";
 
   const form = document.getElementById("modulo");
   const feedback = document.getElementById("feedback");
@@ -252,7 +209,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     if(field) field.classList.toggle("invalid", on);
   }
   function emailValida(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-  function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
@@ -260,12 +216,11 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese","ambito","motivazione","portfolio"];
+    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
       if(id === "email") invalido = !emailValida(v(id));
-      if(id === "portfolio") invalido = !urlValido(v(id));
       segnaErrore(id, invalido);
       if(invalido) ok = false;
     });
@@ -296,11 +251,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       "Email": v("email"),
       "Telefono": v("telefono"),
       "Residenza": v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
-      "Ambito": v("ambito"),
-      "Scuola/titolo": v("scuola"),
-      "Portfolio": v("portfolio"),
-      "Borsa di studio richiesta": document.getElementById("borsa").checked ? "sì" : "no",
-      "Lettera motivazionale": v("motivazione"),
       "Consenso privacy (GDPR)": "accettato",
       "Termini e condizioni": "accettati",
       "Newsletter": document.getElementById("newsletter").checked ? "sì" : "no"
