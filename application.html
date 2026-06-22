@@ -25,8 +25,10 @@ em { color:#d4845a; font-style:normal; }
 footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
 
 .field { margin-bottom:1.1rem; }
-.field.half { display:inline-block; width:calc(50% - 0.5rem); vertical-align:top; }
-.field.half + .field.half { margin-left:1rem; }
+#dati { display:grid; grid-template-columns:1fr 1fr; column-gap:1rem; }
+#dati h2 { grid-column:1 / -1; }
+#dati .field { grid-column:1 / -1; }
+#dati .field.half { grid-column:auto; }
 label { display:block; font-size:0.78rem; letter-spacing:0.03em; color:rgba(232,228,220,0.6); margin-bottom:0.35rem; }
 label .req { color:#d4845a; }
 input, select, textarea {
@@ -181,6 +183,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <button type="submit" class="submit">Send application</button>
+      <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div id="feedback"></div>
     </section>
 
@@ -190,7 +193,10 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 </main>
 
 <script>
-  const DEST = "c.luca2002@gmail.com";
+  /* Web3Forms — same access key as the Italian form.
+     Submissions go to the email registered with this key. */
+  const ACCESS_KEY = "614955a3-cafc-496e-a83a-323313cfeaaf";
+
   const form = document.getElementById("modulo");
   const feedback = document.getElementById("feedback");
   const v = id => (document.getElementById(id).value || "").trim();
@@ -202,8 +208,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
   }
   function emailValida(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
 
-  form.addEventListener("submit", e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
+    feedback.style.color = "#d4845a";
     feedback.textContent = "";
     let ok = true;
 
@@ -229,32 +236,49 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       return;
     }
 
-    const righe = [
-      "SUMMER SCHOOL APPLICATION — Designing the Museum of the Future",
-      "",
-      "— DETAILS —",
-      "Name: " + v("nome") + " " + v("cognome"),
-      "Date of birth: " + v("nascita"),
-      "Place of birth: " + v("luogonascita"),
-      "Nationality: " + v("nazionalita"),
-      "Tax code: " + v("cf"),
-      "Email: " + v("email"),
-      "Phone: " + v("telefono"),
-      "Address: " + v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
-      "",
-      "— CONSENTS —",
-      "Privacy (GDPR): accepted",
-      "Terms and conditions: accepted",
-      "Newsletter: " + (document.getElementById("newsletter").checked ? "yes" : "no")
-    ];
+    const dati = {
+      access_key: ACCESS_KEY,
+      subject: "Summer School application — " + v("nome") + " " + v("cognome"),
+      from_name: "Summer School — application form",
+      botcheck: document.getElementById("botcheck").checked,
+      "Name": v("nome") + " " + v("cognome"),
+      "Date of birth": v("nascita"),
+      "Place of birth": v("luogonascita"),
+      "Nationality": v("nazionalita"),
+      "Tax code": v("cf"),
+      "Email": v("email"),
+      "Phone": v("telefono"),
+      "Address": v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
+      "Privacy consent (GDPR)": "accepted",
+      "Terms and conditions": "accepted",
+      "Newsletter": document.getElementById("newsletter").checked ? "yes" : "no"
+    };
 
-    const oggetto = "Summer School application — " + v("nome") + " " + v("cognome");
-    const corpo = righe.join("\n");
-    window.location.href = "mailto:" + DEST +
-      "?subject=" + encodeURIComponent(oggetto) +
-      "&body=" + encodeURIComponent(corpo);
+    const btn = form.querySelector(".submit");
+    btn.disabled = true;
+    feedback.textContent = "Sending…";
 
-    feedback.textContent = "Your mail app has opened with the application pre-filled: review it and hit send.";
+    try {
+      const r = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(dati)
+      });
+      const out = await r.json();
+      if(out.success){
+        feedback.style.color = "#86d39a";
+        feedback.textContent = "✓ Application sent. You'll receive a confirmation by email.";
+        form.reset();
+      } else {
+        feedback.style.color = "#ff6a5a";
+        feedback.textContent = "✗ Sending failed: " + (out.message || "please try again later.");
+      }
+    } catch(err) {
+      feedback.style.color = "#ff6a5a";
+      feedback.textContent = "✗ Network error: " + err.message;
+    } finally {
+      btn.disabled = false;
+    }
   });
 </script>
 </body>
