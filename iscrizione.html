@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer School — modulo di iscrizione</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 6rem; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.9rem 0; padding-right:90px; display:flex; flex-wrap:wrap; gap:1.3rem; font-size:0.7rem; letter-spacing:0.05em; }
+nav a { color:rgba(232,228,220,0.4); text-decoration:none; }
+nav a:hover { color:#d4845a; }
+main { max-width:64ch; margin:0 auto; }
+section { padding:2.4rem 0; border-bottom:1px solid rgba(232,228,220,0.1); }
+h1 { font-size:2rem; font-weight:300; line-height:1.25; margin-bottom:1rem; }
+h2 { font-size:1.05rem; font-weight:400; color:#d4845a; margin-bottom:1.2rem; letter-spacing:0.04em; }
+p { margin-bottom:1rem; color:rgba(232,228,220,0.85); }
+.lead { font-size:1.15rem; font-weight:300; color:#e8e4dc; }
+.facts { font-size:0.8rem; color:rgba(232,228,220,0.45); margin-top:1.2rem; }
+.facts span { display:inline-block; margin-right:1.4rem; }
+.back { font-size:0.7rem; }
+.todo { border:1px dashed rgba(212,132,90,0.55); padding:0.1em 0.5em; font-size:0.85em; color:#d4845a; }
+strong { color:#e8e4dc; font-weight:600; }
+em { color:#d4845a; font-style:normal; }
+footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
+
+/* form */
+.field { margin-bottom:1.1rem; }
+.field.half { display:inline-block; width:calc(50% - 0.5rem); vertical-align:top; }
+.field.half + .field.half { margin-left:1rem; }
+label { display:block; font-size:0.78rem; letter-spacing:0.03em; color:rgba(232,228,220,0.6); margin-bottom:0.35rem; }
+label .req { color:#d4845a; }
+input, select, textarea {
+  width:100%; background:transparent; color:#e8e4dc; font-family:inherit; font-size:0.92rem;
+  border:1px solid rgba(232,228,220,0.22); border-radius:2px; padding:0.6rem 0.7rem; transition:border-color .25s;
+}
+input:focus, select:focus, textarea:focus { outline:none; border-color:#d4845a; }
+input::placeholder, textarea::placeholder { color:rgba(232,228,220,0.28); }
+select option { background:#080808; }
+textarea { resize:vertical; min-height:130px; }
+.hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
+
+.consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
+.consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
+.consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
+.consent a { color:#d4845a; }
+
+details { border:1px solid rgba(232,228,220,0.15); border-radius:2px; padding:0.7rem 0.9rem; margin-bottom:1.2rem; }
+details summary { cursor:pointer; font-size:0.82rem; color:#d4845a; }
+details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
+
+.note { font-size:0.78rem; color:rgba(232,228,220,0.5); border-left:2px solid rgba(212,132,90,0.5); padding-left:0.9rem; margin-bottom:1.5rem; }
+
+.submit { background:#e8e4dc; color:#080808; border:none; border-radius:2px; font-size:0.85rem; letter-spacing:0.04em; padding:0.8rem 1.6rem; cursor:pointer; font-family:inherit; transition:opacity .25s; }
+.submit:hover { opacity:0.85; }
+.err { color:#ff6a5a; font-size:0.78rem; margin-top:0.3rem; display:none; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color:#ff6a5a; }
+.field.invalid .err { display:block; }
+#feedback { font-size:0.85rem; color:#d4845a; margin-top:1rem; min-height:1.2em; }
+
+#lang { position:fixed; top:0.9rem; right:1.5rem; z-index:10; display:flex; gap:0.45rem; }
+.lbtn { width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,0.55); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.72rem; text-decoration:none; transition:all .3s; }
+.lbtn:hover { background:rgba(255,255,255,0.18); }
+.lbtn.active { background:#fff; color:#080808; border-color:#fff; }
+</style>
+</head>
+<body>
+
+<div id="lang">
+  <a class="lbtn active" href="iscrizione.html">i</a>
+  <a class="lbtn" href="application.html">e</a>
+</div>
+
+<nav>
+  <a href="summer-school.html" class="back">← il programma</a>
+  <a href="#dati">i tuoi dati</a>
+  <a href="#candidatura">la candidatura</a>
+  <a href="#consensi">consensi</a>
+</nav>
+
+<main>
+  <section id="top">
+    <h1>Modulo di iscrizione</h1>
+    <p class="lead">Candidatura alla Summer School <em>Designing the Museum of the Future</em>.</p>
+    <p class="facts"><span>Fondazione Pini · Milano</span><span>7–12 settembre 2026</span><span>18–26 anni</span></p>
+  </section>
+
+  <form id="modulo" novalidate>
+
+    <section id="dati">
+      <h2>i tuoi dati</h2>
+
+      <div class="field half">
+        <label>Nome <span class="req">*</span></label>
+        <input type="text" id="nome" autocomplete="given-name">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>Cognome <span class="req">*</span></label>
+        <input type="text" id="cognome" autocomplete="family-name">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field half">
+        <label>Data di nascita <span class="req">*</span></label>
+        <input type="date" id="nascita">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>Luogo di nascita</label>
+        <input type="text" id="luogonascita" placeholder="città, paese">
+      </div>
+
+      <div class="field half">
+        <label>Nazionalità <span class="req">*</span></label>
+        <input type="text" id="nazionalita">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>Codice fiscale</label>
+        <input type="text" id="cf" placeholder="se applicabile">
+        <div class="hint">Necessario per la fatturazione in Italia.</div>
+      </div>
+
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email">
+        <div class="err">Inserisci un'email valida.</div>
+      </div>
+      <div class="field">
+        <label>Telefono <span class="req">*</span></label>
+        <input type="tel" id="telefono" autocomplete="tel" placeholder="+39 …">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Indirizzo di residenza <span class="req">*</span></label>
+        <input type="text" id="via" placeholder="via e numero" autocomplete="address-line1">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>Città <span class="req">*</span></label>
+        <input type="text" id="citta" autocomplete="address-level2">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>CAP</label>
+        <input type="text" id="cap" autocomplete="postal-code">
+      </div>
+      <div class="field">
+        <label>Paese <span class="req">*</span></label>
+        <input type="text" id="paese" autocomplete="country-name">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+    </section>
+
+    <section id="candidatura">
+      <h2>la candidatura</h2>
+
+      <div class="field">
+        <label>Formazione / ambito <span class="req">*</span></label>
+        <select id="ambito">
+          <option value="">— seleziona —</option>
+          <option>Architettura</option>
+          <option>Design</option>
+          <option>Arti visive</option>
+          <option>Musica</option>
+          <option>Comunicazione</option>
+          <option>Studi culturali</option>
+          <option>Altro</option>
+        </select>
+        <div class="err">Seleziona un'opzione.</div>
+      </div>
+
+      <div class="field">
+        <label>Scuola, università o titolo attuale</label>
+        <input type="text" id="scuola">
+      </div>
+
+      <div class="field">
+        <label>Lettera motivazionale <span class="req">*</span></label>
+        <textarea id="motivazione" placeholder="Perché vuoi partecipare?"></textarea>
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Link al portfolio o a un progetto personale <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://…">
+        <div class="hint">Un link (sito, Drive, Behance…). Potrai allegare file direttamente all'email che si aprirà.</div>
+        <div class="err">Inserisci un link valido.</div>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="borsa">
+        <label for="borsa">Desidero candidarmi per una <strong>borsa di studio</strong> o una tariffa ridotta.</label>
+      </div>
+    </section>
+
+    <section id="consensi">
+      <h2>consensi</h2>
+
+      <div class="note">
+        I dati raccolti servono a valutare la candidatura e a gestire l'eventuale iscrizione. Il pagamento e la fatturazione avvengono <strong>dopo l'ammissione</strong>; i relativi dettagli ti verranno comunicati separatamente.
+      </div>
+
+      <details>
+        <summary>Informativa sul trattamento dei dati (GDPR)</summary>
+        <p>Titolare del trattamento: <span class="todo">da definire — ragione sociale e indirizzo</span>.</p>
+        <p>Finalità: selezione delle candidature, gestione dell'iscrizione e, in caso di ammissione, adempimenti contrattuali e di fatturazione. Base giuridica: consenso e misure precontrattuali.</p>
+        <p>Conservazione dei dati: <span class="todo">da definire</span>. Hai diritto di accedere, rettificare e cancellare i tuoi dati, e di opporti al trattamento scrivendo a <span class="todo">da definire — email del titolare</span>.</p>
+        <p><em>Questo testo è una bozza da completare e far verificare legalmente prima della messa online.</em></p>
+      </details>
+
+      <div class="consent" id="c-privacy">
+        <input type="checkbox" id="privacy">
+        <label for="privacy">Ho letto l'informativa e <strong>acconsento al trattamento dei dati</strong> per le finalità di selezione e iscrizione. <span class="req">*</span></label>
+      </div>
+      <div class="consent" id="c-termini">
+        <input type="checkbox" id="termini">
+        <label for="termini">Accetto i <strong>termini e le condizioni</strong> di partecipazione. <span class="req">*</span></label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="newsletter">
+        <label for="newsletter">Acconsento a ricevere comunicazioni sulle attività di ACME e Fondazione Pini (facoltativo).</label>
+      </div>
+
+      <button type="submit" class="submit">Invia la candidatura</button>
+      <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+      <div id="feedback"></div>
+    </section>
+
+  </form>
+
+  <footer>ACME Academy of Fine Arts and Media · Fondazione Pini — Milano, 7–12 settembre 2026</footer>
+</main>
+
+<script>
+  /* ====================================================================
+     INCOLLA QUI LA TUA ACCESS KEY (gratuita su https://web3forms.com,
+     registrandoti con c.luca2002@gmail.com — la chiave arriva in quella
+     casella). Le candidature verranno inviate alla mail legata alla key.
+     ==================================================================== */
+  const ACCESS_KEY = "LA-TUA-ACCESS-KEY";
+
+  const form = document.getElementById("modulo");
+  const feedback = document.getElementById("feedback");
+  const v = id => (document.getElementById(id).value || "").trim();
+
+  function segnaErrore(id, on){
+    const el = document.getElementById(id);
+    const field = el.closest(".field") || el.closest(".consent");
+    if(field) field.classList.toggle("invalid", on);
+  }
+  function emailValida(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+  function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    feedback.style.color = "#d4845a";
+    feedback.textContent = "";
+    let ok = true;
+
+    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese","ambito","motivazione","portfolio"];
+    obbligatori.forEach(id => {
+      const vuoto = v(id) === "";
+      let invalido = vuoto;
+      if(id === "email") invalido = !emailValida(v(id));
+      if(id === "portfolio") invalido = !urlValido(v(id));
+      segnaErrore(id, invalido);
+      if(invalido) ok = false;
+    });
+
+    const privacy = document.getElementById("privacy").checked;
+    const termini = document.getElementById("termini").checked;
+    document.getElementById("c-privacy").classList.toggle("invalid", !privacy);
+    document.getElementById("c-termini").classList.toggle("invalid", !termini);
+    if(!privacy || !termini) ok = false;
+
+    if(!ok){
+      feedback.textContent = "Controlla i campi evidenziati.";
+      const primo = document.querySelector(".invalid");
+      if(primo) primo.scrollIntoView({behavior:"smooth", block:"center"});
+      return;
+    }
+
+    const dati = {
+      access_key: ACCESS_KEY,
+      subject: "Iscrizione Summer School — " + v("nome") + " " + v("cognome"),
+      from_name: "Summer School — modulo di iscrizione",
+      botcheck: document.getElementById("botcheck").checked,
+      "Nome": v("nome") + " " + v("cognome"),
+      "Data di nascita": v("nascita"),
+      "Luogo di nascita": v("luogonascita"),
+      "Nazionalità": v("nazionalita"),
+      "Codice fiscale": v("cf"),
+      "Email": v("email"),
+      "Telefono": v("telefono"),
+      "Residenza": v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
+      "Ambito": v("ambito"),
+      "Scuola/titolo": v("scuola"),
+      "Portfolio": v("portfolio"),
+      "Borsa di studio richiesta": document.getElementById("borsa").checked ? "sì" : "no",
+      "Lettera motivazionale": v("motivazione"),
+      "Consenso privacy (GDPR)": "accettato",
+      "Termini e condizioni": "accettati",
+      "Newsletter": document.getElementById("newsletter").checked ? "sì" : "no"
+    };
+
+    const btn = form.querySelector(".submit");
+    btn.disabled = true;
+    feedback.textContent = "Invio in corso…";
+
+    try {
+      const r = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(dati)
+      });
+      const out = await r.json();
+      if(out.success){
+        feedback.style.color = "#86d39a";
+        feedback.textContent = "✓ Candidatura inviata. Riceverai conferma via email.";
+        form.reset();
+      } else {
+        feedback.style.color = "#ff6a5a";
+        feedback.textContent = "✗ Invio non riuscito: " + (out.message || "riprova più tardi.");
+      }
+    } catch(err) {
+      feedback.style.color = "#ff6a5a";
+      feedback.textContent = "✗ Errore di rete: " + err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

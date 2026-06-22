@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer School — application form</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 6rem; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.9rem 0; padding-right:90px; display:flex; flex-wrap:wrap; gap:1.3rem; font-size:0.7rem; letter-spacing:0.05em; }
+nav a { color:rgba(232,228,220,0.4); text-decoration:none; }
+nav a:hover { color:#d4845a; }
+main { max-width:64ch; margin:0 auto; }
+section { padding:2.4rem 0; border-bottom:1px solid rgba(232,228,220,0.1); }
+h1 { font-size:2rem; font-weight:300; line-height:1.25; margin-bottom:1rem; }
+h2 { font-size:1.05rem; font-weight:400; color:#d4845a; margin-bottom:1.2rem; letter-spacing:0.04em; }
+p { margin-bottom:1rem; color:rgba(232,228,220,0.85); }
+.lead { font-size:1.15rem; font-weight:300; color:#e8e4dc; }
+.facts { font-size:0.8rem; color:rgba(232,228,220,0.45); margin-top:1.2rem; }
+.facts span { display:inline-block; margin-right:1.4rem; }
+.back { font-size:0.7rem; }
+.todo { border:1px dashed rgba(212,132,90,0.55); padding:0.1em 0.5em; font-size:0.85em; color:#d4845a; }
+strong { color:#e8e4dc; font-weight:600; }
+em { color:#d4845a; font-style:normal; }
+footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
+
+.field { margin-bottom:1.1rem; }
+.field.half { display:inline-block; width:calc(50% - 0.5rem); vertical-align:top; }
+.field.half + .field.half { margin-left:1rem; }
+label { display:block; font-size:0.78rem; letter-spacing:0.03em; color:rgba(232,228,220,0.6); margin-bottom:0.35rem; }
+label .req { color:#d4845a; }
+input, select, textarea {
+  width:100%; background:transparent; color:#e8e4dc; font-family:inherit; font-size:0.92rem;
+  border:1px solid rgba(232,228,220,0.22); border-radius:2px; padding:0.6rem 0.7rem; transition:border-color .25s;
+}
+input:focus, select:focus, textarea:focus { outline:none; border-color:#d4845a; }
+input::placeholder, textarea::placeholder { color:rgba(232,228,220,0.28); }
+select option { background:#080808; }
+textarea { resize:vertical; min-height:130px; }
+.hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
+
+.consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
+.consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
+.consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
+.consent a { color:#d4845a; }
+
+details { border:1px solid rgba(232,228,220,0.15); border-radius:2px; padding:0.7rem 0.9rem; margin-bottom:1.2rem; }
+details summary { cursor:pointer; font-size:0.82rem; color:#d4845a; }
+details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
+
+.note { font-size:0.78rem; color:rgba(232,228,220,0.5); border-left:2px solid rgba(212,132,90,0.5); padding-left:0.9rem; margin-bottom:1.5rem; }
+
+.submit { background:#e8e4dc; color:#080808; border:none; border-radius:2px; font-size:0.85rem; letter-spacing:0.04em; padding:0.8rem 1.6rem; cursor:pointer; font-family:inherit; transition:opacity .25s; }
+.submit:hover { opacity:0.85; }
+.err { color:#ff6a5a; font-size:0.78rem; margin-top:0.3rem; display:none; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color:#ff6a5a; }
+.field.invalid .err { display:block; }
+#feedback { font-size:0.85rem; color:#d4845a; margin-top:1rem; min-height:1.2em; }
+
+#lang { position:fixed; top:0.9rem; right:1.5rem; z-index:10; display:flex; gap:0.45rem; }
+.lbtn { width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,0.55); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.72rem; text-decoration:none; transition:all .3s; }
+.lbtn:hover { background:rgba(255,255,255,0.18); }
+.lbtn.active { background:#fff; color:#080808; border-color:#fff; }
+</style>
+</head>
+<body>
+
+<div id="lang">
+  <a class="lbtn" href="iscrizione.html">i</a>
+  <a class="lbtn active" href="application.html">e</a>
+</div>
+
+<nav>
+  <a href="summer-school-en.html" class="back">← the programme</a>
+  <a href="#dati">your details</a>
+  <a href="#candidatura">your application</a>
+  <a href="#consensi">consents</a>
+</nav>
+
+<main>
+  <section id="top">
+    <h1>Application form</h1>
+    <p class="lead">Application to the Summer School <em>Designing the Museum of the Future</em>.</p>
+    <p class="facts"><span>Fondazione Pini · Milan</span><span>7–12 September 2026</span><span>ages 18–26</span></p>
+  </section>
+
+  <form id="modulo" novalidate>
+
+    <section id="dati">
+      <h2>your details</h2>
+
+      <div class="field half">
+        <label>First name <span class="req">*</span></label>
+        <input type="text" id="nome" autocomplete="given-name">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>Last name <span class="req">*</span></label>
+        <input type="text" id="cognome" autocomplete="family-name">
+        <div class="err">Required field.</div>
+      </div>
+
+      <div class="field half">
+        <label>Date of birth <span class="req">*</span></label>
+        <input type="date" id="nascita">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>Place of birth</label>
+        <input type="text" id="luogonascita" placeholder="city, country">
+      </div>
+
+      <div class="field half">
+        <label>Nationality <span class="req">*</span></label>
+        <input type="text" id="nazionalita">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>Tax code</label>
+        <input type="text" id="cf" placeholder="if applicable">
+        <div class="hint">Italian codice fiscale — needed for invoicing in Italy.</div>
+      </div>
+
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email">
+        <div class="err">Enter a valid email.</div>
+      </div>
+      <div class="field">
+        <label>Phone <span class="req">*</span></label>
+        <input type="tel" id="telefono" autocomplete="tel" placeholder="+39 …">
+        <div class="err">Required field.</div>
+      </div>
+
+      <div class="field">
+        <label>Home address <span class="req">*</span></label>
+        <input type="text" id="via" placeholder="street and number" autocomplete="address-line1">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>City <span class="req">*</span></label>
+        <input type="text" id="citta" autocomplete="address-level2">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>Postal code</label>
+        <input type="text" id="cap" autocomplete="postal-code">
+      </div>
+      <div class="field">
+        <label>Country <span class="req">*</span></label>
+        <input type="text" id="paese" autocomplete="country-name">
+        <div class="err">Required field.</div>
+      </div>
+    </section>
+
+    <section id="candidatura">
+      <h2>your application</h2>
+
+      <div class="field">
+        <label>Background / field <span class="req">*</span></label>
+        <select id="ambito">
+          <option value="">— select —</option>
+          <option>Architecture</option>
+          <option>Design</option>
+          <option>Visual arts</option>
+          <option>Music</option>
+          <option>Communication</option>
+          <option>Cultural studies</option>
+          <option>Other</option>
+        </select>
+        <div class="err">Please select an option.</div>
+      </div>
+
+      <div class="field">
+        <label>Current school, university or qualification</label>
+        <input type="text" id="scuola">
+      </div>
+
+      <div class="field">
+        <label>Motivation letter <span class="req">*</span></label>
+        <textarea id="motivazione" placeholder="Why do you want to take part?"></textarea>
+        <div class="err">Required field.</div>
+      </div>
+
+      <div class="field">
+        <label>Link to your portfolio or a personal project <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://…">
+        <div class="hint">A link (website, Drive, Behance…). You can also attach files directly to the email that opens.</div>
+        <div class="err">Enter a valid link.</div>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="borsa">
+        <label for="borsa">I would like to apply for a <strong>scholarship</strong> or reduced-fee place.</label>
+      </div>
+    </section>
+
+    <section id="consensi">
+      <h2>consents</h2>
+
+      <div class="note">
+        The data collected is used to assess your application and manage enrolment. Payment and invoicing take place <strong>after admission</strong>; details will be communicated separately.
+      </div>
+
+      <details>
+        <summary>Data processing notice (GDPR)</summary>
+        <p>Data controller: <span class="todo">to be defined — legal entity and address</span>.</p>
+        <p>Purpose: assessment of applications, enrolment management and, if admitted, contractual and invoicing obligations. Legal basis: consent and pre-contractual measures.</p>
+        <p>Data retention: <span class="todo">to be defined</span>. You have the right to access, rectify and erase your data, and to object to processing by writing to <span class="todo">to be defined — controller email</span>.</p>
+        <p><em>This text is a draft to be completed and legally reviewed before going live.</em></p>
+      </details>
+
+      <div class="consent" id="c-privacy">
+        <input type="checkbox" id="privacy">
+        <label for="privacy">I have read the notice and <strong>consent to the processing of my data</strong> for selection and enrolment purposes. <span class="req">*</span></label>
+      </div>
+      <div class="consent" id="c-termini">
+        <input type="checkbox" id="termini">
+        <label for="termini">I accept the <strong>terms and conditions</strong> of participation. <span class="req">*</span></label>
+      </div>
+      <div class="consent">
+        <input type="checkbox" id="newsletter">
+        <label for="newsletter">I consent to receive communications about ACME and Fondazione Pini activities (optional).</label>
+      </div>
+
+      <button type="submit" class="submit">Send application</button>
+      <div id="feedback"></div>
+    </section>
+
+  </form>
+
+  <footer>ACME Academy of Fine Arts and Media · Fondazione Pini — Milan, 7–12 September 2026</footer>
+</main>
+
+<script>
+  const DEST = "c.luca2002@gmail.com";
+  const form = document.getElementById("modulo");
+  const feedback = document.getElementById("feedback");
+  const v = id => (document.getElementById(id).value || "").trim();
+
+  function segnaErrore(id, on){
+    const el = document.getElementById(id);
+    const field = el.closest(".field") || el.closest(".consent");
+    if(field) field.classList.toggle("invalid", on);
+  }
+  function emailValida(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+  function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    feedback.textContent = "";
+    let ok = true;
+
+    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese","ambito","motivazione","portfolio"];
+    obbligatori.forEach(id => {
+      const vuoto = v(id) === "";
+      let invalido = vuoto;
+      if(id === "email") invalido = !emailValida(v(id));
+      if(id === "portfolio") invalido = !urlValido(v(id));
+      segnaErrore(id, invalido);
+      if(invalido) ok = false;
+    });
+
+    const privacy = document.getElementById("privacy").checked;
+    const termini = document.getElementById("termini").checked;
+    document.getElementById("c-privacy").classList.toggle("invalid", !privacy);
+    document.getElementById("c-termini").classList.toggle("invalid", !termini);
+    if(!privacy || !termini) ok = false;
+
+    if(!ok){
+      feedback.textContent = "Please check the highlighted fields.";
+      const primo = document.querySelector(".invalid");
+      if(primo) primo.scrollIntoView({behavior:"smooth", block:"center"});
+      return;
+    }
+
+    const righe = [
+      "SUMMER SCHOOL APPLICATION — Designing the Museum of the Future",
+      "",
+      "— DETAILS —",
+      "Name: " + v("nome") + " " + v("cognome"),
+      "Date of birth: " + v("nascita"),
+      "Place of birth: " + v("luogonascita"),
+      "Nationality: " + v("nazionalita"),
+      "Tax code: " + v("cf"),
+      "Email: " + v("email"),
+      "Phone: " + v("telefono"),
+      "Address: " + v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
+      "",
+      "— APPLICATION —",
+      "Field: " + v("ambito"),
+      "School/qualification: " + v("scuola"),
+      "Portfolio: " + v("portfolio"),
+      "Scholarship requested: " + (document.getElementById("borsa").checked ? "yes" : "no"),
+      "",
+      "Motivation letter:",
+      v("motivazione"),
+      "",
+      "— CONSENTS —",
+      "Privacy (GDPR): accepted",
+      "Terms and conditions: accepted",
+      "Newsletter: " + (document.getElementById("newsletter").checked ? "yes" : "no")
+    ];
+
+    const oggetto = "Summer School application — " + v("nome") + " " + v("cognome");
+    const corpo = righe.join("\n");
+    window.location.href = "mailto:" + DEST +
+      "?subject=" + encodeURIComponent(oggetto) +
+      "&body=" + encodeURIComponent(corpo);
+
+    feedback.textContent = "Your mail app has opened with the application pre-filled: review it and hit send.";
+  });
+</script>
+</body>
+</html>

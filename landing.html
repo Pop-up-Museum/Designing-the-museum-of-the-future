@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer School — ascolta</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:100%; height:100%; background:#080808; font-family:system-ui,-apple-system,sans-serif; font-weight:300; text-transform:lowercase; overflow:hidden; }
+  #stage { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:4vw; z-index:1; transition:opacity 1.2s ease; }
+  #text { font-size:clamp(0.78rem,2.1vw,1.45rem); line-height:1.7; color:#e8e4dc; text-align:center; }
+  .line { display:block; white-space:nowrap; }
+  #cursor { display:inline-block; width:0.5em; height:1em; background:#e8e4dc; vertical-align:text-bottom; margin-left:2px; animation:blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .echo { position:fixed; color:#e8e4dc; pointer-events:none; text-align:center; white-space:nowrap; font-weight:300; font-size:clamp(0.78rem,2.1vw,1.45rem); line-height:1.7; }
+  #final { position:fixed; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.9rem; padding:6vw; text-align:center; opacity:0; transition:opacity 2.5s ease; pointer-events:none; }
+  #final.on { opacity:1; pointer-events:auto; }
+  .ftitle { color:#e8e4dc; font-size:clamp(1.2rem,3vw,2rem); line-height:1.3; }
+  .fsub, .fdate { color:rgba(232,228,220,0.5); font-size:0.8rem; letter-spacing:0.05em; }
+  .flink { margin-top:1.4rem; color:rgba(232,228,220,0.55); text-decoration:none; font-size:0.95rem; letter-spacing:0.04em; border-bottom:1px solid rgba(232,228,220,0.2); padding-bottom:2px; transition:color .4s, border-color .4s; }
+  .flink:hover { color:#e8e4dc; border-color:#e8e4dc; }
+
+  /* i quattro attivatori, in basso */
+  #bar { position:fixed; bottom:1.4rem; left:0; right:0; z-index:6; display:flex; justify-content:center; gap:1.6rem; font-size:0.62rem; letter-spacing:0.09em; }
+  .act { color:rgba(232,228,220,0.32); text-decoration:none; cursor:pointer; transition:color .35s, opacity .5s; user-select:none; }
+  .act:hover { color:rgba(232,228,220,0.85); }
+  .act.active { color:rgba(232,228,220,0.7); }
+  .act.hidden { opacity:0; pointer-events:none; }
+
+  /* schermata d'ingresso: bottone bianco, parte tutto da qui */
+  #gate { position:fixed; inset:0; z-index:20; background:#080808; transition:opacity 1s ease; }
+  #gate.hidden { opacity:0; pointer-events:none; }
+  /* il gruppo è posizionato sul punto aureo (φ ≈ 61.8%), non al centro */
+  #gateGroup { position:absolute; left:61.8%; top:61.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:1.1rem; }
+  #gateBtn { width:64px; height:64px; border-radius:50%; background:#e8e4dc; cursor:pointer; transition:transform .3s ease; animation:gatepulse 2.6s ease-in-out infinite; }
+  #gateBtn:hover { transform:scale(1.08); }
+  @keyframes gatepulse { 0%,100%{ box-shadow:0 0 0 0 rgba(232,228,220,0.18); } 50%{ box-shadow:0 0 0 16px rgba(232,228,220,0); } }
+  #gateLabel { font-size:0.65rem; letter-spacing:0.12em; color:rgba(232,228,220,0.4); }
+
+  /* le due sinusoidi del modulor, sullo sfondo dietro al testo */
+  #waves { position:fixed; inset:0; z-index:0; pointer-events:none; }
+  #waveR { stroke:#ff0000; }
+  #waveB { stroke:#4265e4; }
+  #waves path { fill:none; stroke-width:2; opacity:0.4; }
+</style>
+</head>
+<body>
+
+  <div id="gate">
+    <div id="gateGroup">
+      <div id="gateBtn"></div>
+      <div id="gateLabel">click</div>
+    </div>
+  </div>
+
+  <svg id="waves" preserveAspectRatio="none">
+    <path id="waveR"></path>
+    <path id="waveB"></path>
+  </svg>
+
+  <div id="stage"><div id="text"><span id="cursor"></span></div></div>
+
+  <div id="final">
+    <div class="ftitle">designing the museum of the future</div>
+    <div class="fsub">summer school · acme × fondazione pini</div>
+    <div class="fdate">milano — 7–12 settembre 2026</div>
+    <a class="flink" href="summer-school.html">→ il programma</a>
+  </div>
+
+  <div id="bar">
+    <a class="act active" href="landing.html">italiano</a>
+    <a class="act" href="landing-en.html">english</a>
+    <span class="act" id="skip">skip</span>
+    <span class="act" id="onoff">♪ on</span>
+  </div>
+
+<script>
+  const stage=document.getElementById("stage"), textEl=document.getElementById("text"),
+        cursor=document.getElementById("cursor"), final=document.getElementById("final"),
+        skipBtn=document.getElementById("skip"), onoffBtn=document.getElementById("onoff"),
+        gate=document.getElementById("gate"), gateBtn=document.getElementById("gateBtn"),
+        waves=document.getElementById("waves"), waveR=document.getElementById("waveR"), waveB=document.getElementById("waveB");
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ---- eco visivo ---- */
+  function riverbero(lineEl){
+    const r=lineEl.getBoundingClientRect();
+    for(let i=1;i<=3;i++){
+      const g=lineEl.cloneNode(true); g.className="echo";
+      g.style.left=r.left+"px"; g.style.top=r.top+"px"; g.style.width=r.width+"px";
+      g.style.opacity=(0.4/i).toFixed(2);
+      const dur=1000+i*600;
+      g.style.transition="transform "+dur+"ms ease-out, opacity "+dur+"ms ease-out";
+      document.body.appendChild(g);
+      requestAnimationFrame(()=>{ g.style.transform="translateX("+(i*16)+"px)"; g.style.opacity="0"; });
+      setTimeout(()=>g.remove(), dur+200);
+    }
+  }
+  async function riga(testo,{v=55,j=22,eco=false,pausa=900}={}){
+    if(saltato) return;
+    const line=document.createElement("span"); line.className="line"; line.textContent="";
+    cursor.before(line);
+    for(const ch of [...testo]){ if(saltato) return; line.textContent+=ch; await sleep(v+Math.random()*j); }
+    if(eco){ riverbero(line); await sleep(700); }
+    if(pausa) await sleep(pausa);
+  }
+  function aCapo(){ cursor.before(document.createElement("br")); }
+
+  let saltato=false;
+  async function mostraFinale(){
+    if(saltato) return; saltato=true;
+    cursor.style.display="none";
+    document.querySelectorAll(".line").forEach(l=>riverbero(l));
+    stage.style.transition="opacity 1.2s ease"; stage.style.opacity="0";
+    skipBtn.classList.add("hidden");
+    await sleep(1300);
+    stage.style.display="none";
+    final.classList.add("on");
+  }
+
+  /* ====================================================================
+     LE DUE SINUSOIDI (modulor): rossa e blu, verticali, al centro dietro
+     al testo. Si incrociano (fase opposta) e ondeggiano piano; a ogni
+     nota la voce corrispondente si "gonfia" e poi torna a calma.
+     ==================================================================== */
+  let W=0, H=0;
+  function dimensiona(){ W=window.innerWidth; H=window.innerHeight; waves.setAttribute("width",W); waves.setAttribute("height",H); }
+  window.addEventListener("resize", dimensiona); dimensiona();
+
+  const BASE=4, MAXAMP=48, CICLI=3;
+  let ampR=BASE, ampB=BASE, faseR=0, faseB=Math.PI, animOn=false;
+
+  function ondaPath(amp, fase){
+    const passi=64, k=(Math.PI*2*CICLI)/Math.max(H,1), cx=W/2; let d="";
+    for(let i=0;i<=passi;i++){
+      const y=H*i/passi, x=cx+amp*Math.sin(fase+y*k);
+      d+=(i===0?"M":"L")+x.toFixed(1)+" "+y.toFixed(1)+" ";
+    }
+    return d;
+  }
+  function animaOnde(){
+    if(!animOn) return;
+    faseR+=0.018; faseB+=0.018;
+    ampR+=(BASE-ampR)*0.045; ampB+=(BASE-ampB)*0.045;   // decadimento verso la calma
+    waveR.setAttribute("d", ondaPath(ampR, faseR));
+    waveB.setAttribute("d", ondaPath(ampB, faseB));
+    requestAnimationFrame(animaOnde);
+  }
+  function kick(voce){ if(voce==="r") ampR=MAXAMP; else ampB=MAXAMP; }
+
+  /* ====================================================================
+     SUONO — Fibonacci secondo il Modulor (Le Corbusier): due serie in
+     rapporto aureo (φ), rossa e blu, che si intrecciano nel tempo.
+     Parte solo al click sul gate (è il gesto che sblocca l'audio nel
+     browser), poi resta un sottofondo ambientale continuo.
+     ==================================================================== */
+  let ctx=null, master=null, reverb=null, acceso=true, avviato=false, timers=[];
+
+  function costruisciStanza(){
+    const sr=ctx.sampleRate, len=sr*2.0, buf=ctx.createBuffer(2,len,sr);
+    for(let c=0;c<2;c++){ const d=buf.getChannelData(c);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.0); }
+    const cv=ctx.createConvolver(); cv.buffer=buf; return cv;
+  }
+  function initAudio(){
+    if(ctx) return;
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain(); master.gain.value=0.8; master.connect(ctx.destination);
+    reverb=costruisciStanza();
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1600;
+    reverb.connect(lp); lp.connect(master);
+  }
+  function goccia(freq, pan){
+    const o=ctx.createOscillator(); o.type="triangle"; o.frequency.value=freq;
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1100;
+    const g=ctx.createGain(); const p=ctx.createStereoPanner(); p.pan.value=pan;
+    const t=ctx.currentTime;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(0.17,t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+2.6);
+    o.connect(lp); lp.connect(g); g.connect(p);
+    const send=ctx.createGain(); send.gain.value=0.4;
+    p.connect(master); p.connect(send); send.connect(reverb);
+    o.start(t); o.stop(t+2.8);
+  }
+
+  const FIB=[1,1,2,3,5,8,13];
+  const BEAT=360;
+  const PHI=1.6180339887;
+  function fold(r){ while(r>=2) r/=2; while(r<1) r*=2; return r; }
+  function grigliaPhi(base, offset){
+    const a=[]; for(let k=0;k<5;k++) a.push(base*fold(Math.pow(PHI,k+offset))); return a.sort((x,y)=>x-y);
+  }
+  const ROSSA_PHI=grigliaPhi(110,0);
+  const BLU_PHI  =grigliaPhi(110,0.5);   // sfalsata di mezzo passo aureo
+
+  function avviaTempo(){
+    let iR=0;
+    (function tR(){ const i=iR%FIB.length; goccia(ROSSA_PHI[i%ROSSA_PHI.length], -0.6); kick("r"); iR++;
+      timers.push(setTimeout(tR, FIB[i]*BEAT)); })();
+    let iB=2;  // la blu parte sfasata
+    (function tB(){ const i=iB%FIB.length; goccia(BLU_PHI[i%BLU_PHI.length], 0.6); kick("b"); iB++;
+      timers.push(setTimeout(tB, FIB[i]*(BEAT+12))); })();   // beat un filo diverso: sfasano piano
+  }
+  function avviaSuono(){
+    if(avviato) return;
+    initAudio(); ctx.resume(); avviaTempo(); avviato=true;
+  }
+  function applicaStato(){
+    if(!avviato) return;
+    const t=ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setTargetAtTime(acceso?0.8:0, t, 1.1);   // dissolvenza lenta
+    onoffBtn.textContent = acceso ? "♪ on" : "♪ off";
+  }
+
+  /* ---- il gate: tutto parte da qui, un solo click ---- */
+  function entra(){
+    avviaSuono();
+    gate.classList.add("hidden");
+    setTimeout(()=>{ gate.style.display="none"; }, 1000);
+    animOn=true; animaOnde();
+    run();
+  }
+  gateBtn.addEventListener("click", entra, {once:true});
+
+  // i bottoni
+  skipBtn.addEventListener("click", mostraFinale);
+  onoffBtn.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    acceso=!acceso;
+    applicaStato();
+  });
+
+  /* ---- testo ---- */
+  async function run(){
+    await sleep(900);
+    await riga("prima di vedere, si ascolta.", {v:58,j:24,eco:true,pausa:1200}); aCapo();
+    await riga("una casa diventata museo.", {v:48,pausa:600}); aCapo();
+    await riga("le stanze dove qualcuno ha dipinto per cinquant'anni.", {v:40,pausa:1300}); aCapo(); aCapo();
+    await riga("una scuola d'estate.", {v:50,pausa:500}); aCapo();
+    await riga("milano — dal 7 al 12 settembre 2026.", {v:42,pausa:1300}); aCapo(); aCapo();
+    await riga("si progetta il museo che non esiste ancora.", {v:50,eco:true,pausa:2200});
+    await mostraFinale();
+  }
+</script>
+</body>
+</html>
