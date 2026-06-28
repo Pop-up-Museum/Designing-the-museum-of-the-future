@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer School — Designing the Museum of the Future | ACME</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+@font-face {
+  font-family: "Ernie Handwriting";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("https://acmemilano.it/wp-content/uploads/2026/02/AdobeHandwriting-Ernie.ttf") format("truetype");
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background-color:#000000;
+  background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/BGPattern-01.webp");
+  background-position:top center;
+  background-size:auto;
+  color:#FFFFFF;
+  font-family:"Roboto", sans-serif;
+  line-height:1.5;
+}
+
+.section {
+  position:relative;
+  background-position:top center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+.section::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+.section-inner {
+  position:relative;
+  z-index:1;
+  max-width:1140px;
+  margin:0 auto;
+  padding:120px 50px;
+}
+@media (max-width:767px) {
+  .section-inner { padding:70px 24px; }
+}
+
+/* sezione 1 — hero */
+#hero { background-image:url("https://acmemilano.it/wp-content/uploads/2026/03/HOME-Acme-bg-new-01c.webp"); }
+#hero::before { background-color:rgba(7,7,7,0.62); }
+#hero .section-inner { text-align:center; }
+.eyebrow {
+  font-family:"Roboto", sans-serif;
+  font-size:16px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:3.8px;
+  color:#69BC95;
+  margin-bottom:24px;
+}
+h1.hero-title {
+  font-family:"Roboto", sans-serif;
+  font-size:64px;
+  font-weight:600;
+  line-height:1.1em;
+  color:#FFFFFF;
+  margin-bottom:28px;
+}
+@media (max-width:767px) { h1.hero-title { font-size:38px; } }
+.hero-script {
+  font-family:"Ernie Handwriting", cursive;
+  font-size:42px;
+  font-weight:500;
+  color:#FFFFFF;
+  margin-top:8px;
+}
+@media (max-width:767px) { .hero-script { font-size:28px; } }
+
+/* sezione 2 — descrizione */
+#descrizione {
+  background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/HOME-Acme-bg-new-02.webp");
+}
+#descrizione::before {
+  background-color:transparent;
+  background-image:linear-gradient(180deg, #000000 0%, rgba(0,0,0,0.35) 40%, #000000 100%);
+}
+#descrizione .section-inner { max-width:760px; }
+#descrizione .eyebrow { color:#FFCCD8; text-align:start; }
+p.body-copy {
+  font-family:"Roboto Slab", serif;
+  font-size:19px;
+  font-weight:300;
+  line-height:1.7em;
+  color:#FFFFFF;
+}
+p.body-copy strong { font-weight:500; }
+.facts {
+  margin-top:28px;
+  font-family:"Roboto", sans-serif;
+  font-size:14px;
+  letter-spacing:0.5px;
+  color:#D5D1D1;
+}
+.facts span { display:inline-block; margin-right:1.4rem; }
+
+/* sezione 3 — CTA */
+#cta {
+  background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/HOME-Acme-bg-new-03-scaled.webp");
+}
+#cta::before { background-color:rgba(0,0,0,0.72); }
+#cta .section-inner { text-align:center; }
+#cta .eyebrow { color:#FFF3C8; }
+a.cta-button {
+  display:inline-block;
+  margin-top:8px;
+  background-color:#61CE70;
+  color:#0B0B0B;
+  font-family:"Roboto", sans-serif;
+  font-size:16px;
+  font-weight:600;
+  border-radius:3px;
+  padding:16px 34px;
+  text-decoration:none;
+  transition:opacity .3s;
+}
+a.cta-button:hover { opacity:.85; }
+.todo {
+  display:inline-block;
+  margin-top:14px;
+  background:#fff3cd;
+  color:#856404;
+  padding:0.15em 0.5em;
+  font-size:0.78rem;
+  border:1px dashed #856404;
+  font-family:"Roboto", sans-serif;
+}
+
+footer.site-footer {
+  text-align:center;
+  padding:40px 20px;
+  font-family:"Roboto", sans-serif;
+  font-size:14px;
+  color:#919191;
+  background-color:#000000;
+}
+</style>
+</head>
+<body>
+
+<section id="hero" class="section">
+  <div class="section-inner">
+    <div class="eyebrow">ACME × Fondazione Pini</div>
+    <h1 class="hero-title">Designing the Museum<br>of the Future</h1>
+    <div class="hero-script">si ascolta prima di vedere.</div>
+  </div>
+</section>
+
+<section id="descrizione" class="section">
+  <div class="section-inner">
+    <div class="eyebrow">Summer School 2026</div>
+    <p class="body-copy">
+      Accademia ACME, in collaborazione con Fondazione Pini di Milano, organizza la Summer School
+      <strong>Designing the Museum of the Future</strong>, in programma a Milano dal 7 al 12 settembre 2026.
+      Il percorso è rivolto a studenti e giovani professionisti tra i 18 e i 26 anni e, nell'edizione 2026,
+      è dedicato al Sound Design &amp; Spatial Audio. Per il programma completo, i dettagli sulla selezione
+      e le modalità di iscrizione è disponibile il sito ufficiale della Summer School.
+    </p>
+    <p class="facts"><span>Fondazione Pini · Milano</span><span>7–12 settembre 2026</span><span>18–26 anni</span></p>
+  </div>
+</section>
+
+<section id="cta" class="section">
+  <div class="section-inner">
+    <div class="eyebrow">Scopri il programma</div>
+    <a class="cta-button" href="https://pop-up-museum.github.io/Designing-the-museum-of-the-future/landing.html">Vai al sito della Summer School →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  ACME Accademia di Belle Arti Europea dei Media · Fondazione Pini — Milano
+</footer>
+
+</body>
+</html>
