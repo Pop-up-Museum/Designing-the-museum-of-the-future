@@ -19,15 +19,30 @@
 
 * { margin:0; padding:0; box-sizing:border-box; }
 
+html, body { min-height:100%; }
 body {
   background-color:#000000;
   background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/BGPattern-01.webp");
+  background-repeat:repeat;
   background-position:top center;
-  background-size:auto;
+  background-size:395px auto;
   color:#FFFFFF;
   font-family:"Roboto", sans-serif;
   line-height:1.5;
 }
+.content-column {
+  width:60%;
+  margin:0 auto;
+  background-color:#000000;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+@media (max-width:900px) {
+  .content-column { width:92%; }
+}
+main { flex:1 0 auto; }
+footer.site-footer { margin-top:auto; }
 
 .section {
   position:relative;
@@ -52,14 +67,7 @@ body {
   .section-inner { padding:70px 24px; }
 }
 
-/* sezione 1 — hero: unica immagine di sfondo, centrata, 60% della larghezza */
-#hero {
-  background-image:url("https://acmemilano.it/wp-content/uploads/2026/03/HOME-Acme-bg-new-01c.webp");
-  background-size:60% auto;
-  background-position:top center;
-  background-repeat:no-repeat;
-}
-#hero::before { background-color:rgba(7,7,7,0.62); }
+/* sezione 1 — hero: solo testo, niente foto */
 #hero .section-inner { text-align:center; }
 .eyebrow {
   font-family:"Roboto", sans-serif;
@@ -148,6 +156,9 @@ footer.site-footer {
 </head>
 <body>
 
+<div class="content-column">
+<main>
+
 <section id="hero" class="section">
   <div class="section-inner">
     <div class="eyebrow">ACME × Fondazione Pini</div>
@@ -177,9 +188,13 @@ footer.site-footer {
   </div>
 </section>
 
+</main>
+
 <footer class="site-footer">
   ACME Accademia di Belle Arti Europea dei Media · Fondazione Pini — Milano
 </footer>
+
+</div>
 
 </body>
 </html>
