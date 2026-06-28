@@ -52,8 +52,13 @@ body {
   .section-inner { padding:70px 24px; }
 }
 
-/* sezione 1 — hero */
-#hero { background-image:url("https://acmemilano.it/wp-content/uploads/2026/03/HOME-Acme-bg-new-01c.webp"); }
+/* sezione 1 — hero: unica immagine di sfondo, centrata, 60% della larghezza */
+#hero {
+  background-image:url("https://acmemilano.it/wp-content/uploads/2026/03/HOME-Acme-bg-new-01c.webp");
+  background-size:60% auto;
+  background-position:top center;
+  background-repeat:no-repeat;
+}
 #hero::before { background-color:rgba(7,7,7,0.62); }
 #hero .section-inner { text-align:center; }
 .eyebrow {
@@ -83,14 +88,7 @@ h1.hero-title {
 }
 @media (max-width:767px) { .hero-script { font-size:28px; } }
 
-/* sezione 2 — descrizione */
-#descrizione {
-  background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/HOME-Acme-bg-new-02.webp");
-}
-#descrizione::before {
-  background-color:transparent;
-  background-image:linear-gradient(180deg, #000000 0%, rgba(0,0,0,0.35) 40%, #000000 100%);
-}
+/* sezione 2 — descrizione: niente foto, sfondo nero pieno */
 #descrizione .section-inner { max-width:760px; }
 #descrizione .eyebrow { color:#FFCCD8; text-align:start; }
 p.body-copy {
@@ -110,11 +108,7 @@ p.body-copy strong { font-weight:500; }
 }
 .facts span { display:inline-block; margin-right:1.4rem; }
 
-/* sezione 3 — CTA */
-#cta {
-  background-image:url("https://acmemilano.it/wp-content/uploads/2026/02/HOME-Acme-bg-new-03-scaled.webp");
-}
-#cta::before { background-color:rgba(0,0,0,0.72); }
+/* sezione 3 — CTA: niente foto, sfondo nero pieno */
 #cta .section-inner { text-align:center; }
 #cta .eyebrow { color:#FFF3C8; }
 a.cta-button {
