@@ -6,11 +6,21 @@
 <title>Fondazione Pini</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { background:#080808; overflow:hidden; height:100%; width:100%; }
-  #stage { position:fixed; inset:0; overflow:hidden; }
-  #track { position:absolute; left:0; top:0; width:100%; will-change:transform; }
-  .set { width:100%; }
-  .set img { display:block; width:100%; height:auto; }
+  html, body { background:#080808; height:100%; width:100%; overflow:hidden; }
+
+  #wrap { position:fixed; inset:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+  #wrap::-webkit-scrollbar { width:0; height:0; }
+
+  .set { column-count:2; column-gap:6px; padding:6px; }
+  @media (min-width:640px)  { .set { column-count:3; } }
+  @media (min-width:1000px) { .set { column-count:4; } }
+
+  .set img {
+    display:block;
+    width:100%;
+    margin-bottom:6px;
+    break-inside:avoid;
+  }
 
   #back {
     position:fixed; top:1.2rem; left:1.2rem; z-index:5;
@@ -32,72 +42,65 @@
 
 <a id="back" href="summer-school-en.html" aria-label="back to the programme"><span></span></a>
 
-<div id="stage">
-  <div id="track">
-    <div class="set" id="setA">
-      <img src="img/pini-01.jpg" alt="">
-      <img src="img/pini-02.jpg" alt="">
-      <img src="img/pini-03.jpg" alt="">
-      <img src="img/pini-04.jpg" alt="">
-      <img src="img/pini-05.jpg" alt="">
-      <img src="img/pini-06.jpg" alt="">
-      <img src="img/pini-07.jpg" alt="">
-      <img src="img/pini-08.jpg" alt="">
-      <img src="img/pini-09.jpg" alt="">
-      <img src="img/pini-10.jpg" alt="">
-      <img src="img/pini-11.jpg" alt="">
-    </div>
-    <div class="set" id="setB" aria-hidden="true">
-      <img src="img/pini-01.jpg" alt="">
-      <img src="img/pini-02.jpg" alt="">
-      <img src="img/pini-03.jpg" alt="">
-      <img src="img/pini-04.jpg" alt="">
-      <img src="img/pini-05.jpg" alt="">
-      <img src="img/pini-06.jpg" alt="">
-      <img src="img/pini-07.jpg" alt="">
-      <img src="img/pini-08.jpg" alt="">
-      <img src="img/pini-09.jpg" alt="">
-      <img src="img/pini-10.jpg" alt="">
-      <img src="img/pini-11.jpg" alt="">
-    </div>
+<div id="wrap">
+  <div class="set" id="setA">
+    <img src="img/pini-01.jpg" alt=""><img src="img/pini-02.jpg" alt="">
+    <img src="img/pini-03.jpg" alt=""><img src="img/pini-04.jpg" alt="">
+    <img src="img/pini-05.jpg" alt=""><img src="img/pini-06.jpg" alt="">
+    <img src="img/pini-07.jpg" alt=""><img src="img/pini-08.jpg" alt="">
+    <img src="img/pini-09.jpg" alt=""><img src="img/pini-10.jpg" alt="">
+    <img src="img/pini-11.jpg" alt="">
+  </div>
+  <div class="set" id="setB" aria-hidden="true">
+    <img src="img/pini-01.jpg" alt=""><img src="img/pini-02.jpg" alt="">
+    <img src="img/pini-03.jpg" alt=""><img src="img/pini-04.jpg" alt="">
+    <img src="img/pini-05.jpg" alt=""><img src="img/pini-06.jpg" alt="">
+    <img src="img/pini-07.jpg" alt=""><img src="img/pini-08.jpg" alt="">
+    <img src="img/pini-09.jpg" alt=""><img src="img/pini-10.jpg" alt="">
+    <img src="img/pini-11.jpg" alt="">
+  </div>
+  <div class="set" id="setC" aria-hidden="true">
+    <img src="img/pini-01.jpg" alt=""><img src="img/pini-02.jpg" alt="">
+    <img src="img/pini-03.jpg" alt=""><img src="img/pini-04.jpg" alt="">
+    <img src="img/pini-05.jpg" alt=""><img src="img/pini-06.jpg" alt="">
+    <img src="img/pini-07.jpg" alt=""><img src="img/pini-08.jpg" alt="">
+    <img src="img/pini-09.jpg" alt=""><img src="img/pini-10.jpg" alt="">
+    <img src="img/pini-11.jpg" alt="">
   </div>
 </div>
 
 <script>
-  const track = document.getElementById("track");
+  /* scroll infinito manuale: tre set identici (A,B,C), si parte su B.
+     l'utente scorre con le sue dita/rotellina; quando esce dal set
+     centrale saltiamo silenziosamente di un'altezza di set, così il
+     contenuto sembra non finire mai, ma il movimento resta tutto suo. */
+  const wrap = document.getElementById("wrap");
   const setA = document.getElementById("setA");
-  const SPEED = 42; // px al secondo — regola qui per velocità diversa
-
-  let setHeight = 0;
-  let y = 0;
-  let last = null;
+  let H = 0;
 
   function measure() {
-    setHeight = setA.getBoundingClientRect().height;
+    H = setA.getBoundingClientRect().height;
+    if (H > 0) wrap.scrollTop = H; // parte su set B
   }
 
-  function tick(t) {
-    if (last === null) last = t;
-    const dt = (t - last) / 1000;
-    last = t;
-    if (setHeight > 0) {
-      y -= SPEED * dt;
-      if (y <= -setHeight) y += setHeight;
-      track.style.transform = "translateY(" + y + "px)";
+  function onScroll() {
+    if (H <= 0) return;
+    if (wrap.scrollTop >= 2 * H) {
+      wrap.scrollTop -= H;
+    } else if (wrap.scrollTop <= 0) {
+      wrap.scrollTop += H;
     }
-    requestAnimationFrame(tick);
   }
 
-  const imgs = track.querySelectorAll("img");
+  const imgs = wrap.querySelectorAll("img");
   let loaded = 0;
   imgs.forEach(img => {
-    if (img.complete) { loaded++; }
+    if (img.complete) { loaded++; if (loaded === imgs.length) measure(); }
     else img.addEventListener("load", () => { loaded++; if (loaded === imgs.length) measure(); });
   });
   window.addEventListener("resize", measure);
-  window.addEventListener("load", measure);
-  measure();
-  requestAnimationFrame(tick);
+  wrap.addEventListener("scroll", onScroll, { passive:true });
+  setTimeout(measure, 300);
 </script>
 </body>
 </html>
