@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Summer School — modulo di iscrizione</title>
+<title>Summer School — modulo di pre-iscrizione</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
@@ -42,6 +42,16 @@ select option { background:#080808; }
 textarea { resize:vertical; min-height:130px; }
 .hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
 
+.tel-row { display:flex; gap:0.6rem; }
+.tel-row .prefisso { width:5.5rem; flex-shrink:0; }
+.tel-row .numero { flex:1; }
+
+input[type="file"] { padding:0.5rem 0.7rem; font-size:0.85rem; }
+input[type="file"]::file-selector-button {
+  background:rgba(232,228,220,0.1); color:#e8e4dc; border:none; border-radius:2px;
+  padding:0.4rem 0.8rem; margin-right:0.7rem; cursor:pointer; font-family:inherit; font-size:0.8rem;
+}
+
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
@@ -73,7 +83,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 <body>
 
 <div id="cookieBar">
-  <span>questo sito non utilizza cookie di tracciamento: i soli dati raccolti sono quelli che ci fornisci volontariamente in fase di iscrizione. <a href="privacy-cookie.html">scopri di più</a></span>
+  <span>questo sito non utilizza cookie di tracciamento: i soli dati raccolti sono quelli che ci fornisci volontariamente in fase di pre-iscrizione. <a href="privacy-cookie.html">scopri di più</a></span>
   <button id="cookieOk">ho capito</button>
 </div>
 <script>
@@ -100,9 +110,10 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 
 <main>
   <section id="top">
-    <h1>Modulo di iscrizione</h1>
-    <p class="lead">Candidatura alla Summer School <em>Designing the Museum of the Future</em>.</p>
+    <h1>Pre-iscrizione</h1>
+    <p class="lead">Richiesta di pre-iscrizione alla Summer School <em>Designing the Museum of the Future</em>.</p>
     <p class="facts"><span>Fondazione Pini · Milano</span><span>7–12 settembre 2026</span><span>18–26 anni</span></p>
+    <p class="facts"><span>Scadenza pre-iscrizioni: 15 agosto 2026</span></p>
   </section>
 
   <form id="modulo" novalidate>
@@ -127,19 +138,19 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <div class="err">Campo obbligatorio.</div>
       </div>
       <div class="field half">
-        <label>Luogo di nascita</label>
-        <input type="text" id="luogonascita" placeholder="città, paese">
-      </div>
-
-      <div class="field half">
         <label>Nazionalità <span class="req">*</span></label>
         <input type="text" id="nazionalita">
         <div class="err">Campo obbligatorio.</div>
       </div>
+
       <div class="field half">
-        <label>Codice fiscale</label>
-        <input type="text" id="cf" placeholder="se applicabile">
-        <div class="hint">Necessario per la fatturazione in Italia.</div>
+        <label>Comune di nascita <span class="req">*</span></label>
+        <input type="text" id="comunenascita">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+      <div class="field half">
+        <label>Provincia di nascita</label>
+        <input type="text" id="provincianascita" placeholder="sigla o estero">
       </div>
 
       <div class="field">
@@ -147,9 +158,13 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <input type="email" id="email" autocomplete="email">
         <div class="err">Inserisci un'email valida.</div>
       </div>
+
       <div class="field">
         <label>Telefono <span class="req">*</span></label>
-        <input type="tel" id="telefono" autocomplete="tel" placeholder="+39 …">
+        <div class="tel-row">
+          <input type="text" id="prefisso" class="prefisso" value="+39" autocomplete="tel-country-code">
+          <input type="tel" id="numero" class="numero" placeholder="numero di telefono" autocomplete="tel-national">
+        </div>
         <div class="err">Campo obbligatorio.</div>
       </div>
 
@@ -158,19 +173,42 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <input type="text" id="via" placeholder="via e numero" autocomplete="address-line1">
         <div class="err">Campo obbligatorio.</div>
       </div>
+      <div class="field">
+        <label>Indirizzo — riga 2</label>
+        <input type="text" id="via2" placeholder="scala, piano, altro (facoltativo)" autocomplete="address-line2">
+      </div>
+
       <div class="field half">
         <label>Città <span class="req">*</span></label>
         <input type="text" id="citta" autocomplete="address-level2">
         <div class="err">Campo obbligatorio.</div>
       </div>
       <div class="field half">
+        <label>Provincia</label>
+        <input type="text" id="provincia" placeholder="sigla o estero" autocomplete="address-level1">
+      </div>
+
+      <div class="field half">
         <label>CAP</label>
         <input type="text" id="cap" autocomplete="postal-code">
       </div>
-      <div class="field">
+      <div class="field half">
         <label>Paese <span class="req">*</span></label>
         <input type="text" id="paese" autocomplete="country-name">
         <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Codice fiscale</label>
+        <input type="text" id="cf" placeholder="se applicabile">
+        <div class="hint">Necessario per la fatturazione in Italia.</div>
+      </div>
+
+      <div class="field">
+        <label>Allega carta d'identità e codice fiscale <span class="req">*</span></label>
+        <input type="file" id="documenti" accept="image/*,.pdf" multiple>
+        <div class="hint">Puoi allegare più file (es. fronte e retro del documento). Formati immagine o PDF, max ~5MB in totale.</div>
+        <div class="err">Allega almeno un file.</div>
       </div>
     </section>
 
@@ -178,32 +216,28 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       <h2>consensi</h2>
 
       <div class="note">
-        I dati raccolti servono a valutare la candidatura e a gestire l'eventuale iscrizione. Il pagamento e la fatturazione avvengono <strong>dopo l'ammissione</strong>; i relativi dettagli ti verranno comunicati separatamente.
+        Questa è una <strong>pre-iscrizione</strong>: non è ancora un'iscrizione perfezionata. Il pagamento e la fatturazione avvengono dopo l'ammissione; i relativi dettagli ti verranno comunicati separatamente.
       </div>
 
       <details>
-        <summary>Informativa sul trattamento dei dati (GDPR)</summary>
+        <summary>Informativa sul trattamento dei dati</summary>
         <p>Titolare del trattamento: <strong>Leonardo da Vinci S.r.l.</strong>, Via dei Cattaneo 14, 28100 Novara (NO) — P.IVA/C.F. 01044700035.</p>
-        <p>Finalità: selezione delle candidature, gestione dell'iscrizione e, in caso di ammissione, adempimenti contrattuali e di fatturazione. Base giuridica: consenso e misure precontrattuali.</p>
-        <p>I tuoi dati vengono raccolti unicamente al momento dell'iscrizione, tramite questo modulo: non vengono registrati dati di accesso, di navigazione o altri dati relativi all'uso del sito.</p>
+        <p>Finalità: gestione della pre-iscrizione e, in caso di ammissione, adempimenti contrattuali e di fatturazione. Base giuridica: consenso e misure precontrattuali.</p>
+        <p>I tuoi dati vengono raccolti unicamente al momento della pre-iscrizione, tramite questo modulo: non vengono registrati dati di accesso, di navigazione o altri dati relativi all'uso del sito.</p>
         <p>Cookie: questo sito non utilizza cookie di tracciamento o di profilazione. Non vengono impostati cookie di terze parti né strumenti di analisi del traffico.</p>
-        <p>Conservazione dei dati: per il tempo necessario alla selezione e, in caso di ammissione, per gli adempimenti amministrativi e fiscali previsti dalla legge. Hai diritto di accedere, rettificare e cancellare i tuoi dati, e di opporti al trattamento scrivendo a <a href="mailto:comunicazione@acmemilano.it" style="color:#d4845a;">comunicazione@acmemilano.it</a>.</p>
+        <p>Conservazione dei dati: per il tempo necessario alla gestione della pre-iscrizione e, in caso di ammissione, per gli adempimenti amministrativi e fiscali previsti dalla legge. Hai diritto di accedere, rettificare e cancellare i tuoi dati, e di opporti al trattamento scrivendo a <a href="mailto:comunicazione@acmemilano.it" style="color:#d4845a;">comunicazione@acmemilano.it</a>.</p>
       </details>
 
       <div class="consent" id="c-privacy">
         <input type="checkbox" id="privacy">
-        <label for="privacy">Ho letto l'informativa e <strong>acconsento al trattamento dei dati</strong> per le finalità di selezione e iscrizione. <span class="req">*</span></label>
+        <label for="privacy">Ai sensi del <strong>D.Lgs. 196/2003</strong> acconsento al <strong>trattamento dei dati personali</strong>. <span class="req">*</span></label>
       </div>
-      <div class="consent" id="c-termini">
-        <input type="checkbox" id="termini">
-        <label for="termini">Accetto i <strong>termini e le condizioni</strong> di partecipazione. <span class="req">*</span></label>
-      </div>
-      <div class="consent">
-        <input type="checkbox" id="newsletter">
-        <label for="newsletter">Acconsento a ricevere comunicazioni sulle attività di ACME e Fondazione Pini (facoltativo).</label>
+      <div class="consent" id="c-diffusione">
+        <input type="checkbox" id="diffusione">
+        <label for="diffusione">Acconsento alla <strong>comunicazione e diffusione dei dati personali</strong> nell'ambito delle attività della Summer School. <span class="req">*</span></label>
       </div>
 
-      <button type="submit" class="submit">Invia la candidatura</button>
+      <button type="submit" class="submit">Invia la pre-iscrizione</button>
       <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div id="feedback"></div>
     </section>
@@ -215,11 +249,13 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 
 <script>
   /* ====================================================================
-     INCOLLA QUI LA TUA ACCESS KEY (gratuita su https://web3forms.com,
-     registrandoti con c.luca2002@gmail.com — la chiave arriva in quella
-     casella). Le candidature verranno inviate alla mail legata alla key.
+     ACCESS KEY DA SOSTITUIRE.
+     La chiave precedente era registrata sulla mail personale
+     (c.luca2002@gmail.com). Vai su https://web3forms.com, registra la
+     nuova access key con la mail ufficiale di destinazione, e incollala
+     qui sotto al posto del placeholder.
      ==================================================================== */
-  const ACCESS_KEY = "614955a3-cafc-496e-a83a-323313cfeaaf";
+  const ACCESS_KEY = "INCOLLA-QUI-LA-NUOVA-ACCESS-KEY";
 
   const form = document.getElementById("modulo");
   const feedback = document.getElementById("feedback");
@@ -238,7 +274,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese"];
+    const obbligatori = ["nome","cognome","nascita","nazionalita","comunenascita","email","numero","via","citta","paese"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
@@ -247,11 +283,16 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       if(invalido) ok = false;
     });
 
+    const fileInput = document.getElementById("documenti");
+    const haFile = fileInput.files && fileInput.files.length > 0;
+    segnaErrore("documenti", !haFile);
+    if(!haFile) ok = false;
+
     const privacy = document.getElementById("privacy").checked;
-    const termini = document.getElementById("termini").checked;
+    const diffusione = document.getElementById("diffusione").checked;
     document.getElementById("c-privacy").classList.toggle("invalid", !privacy);
-    document.getElementById("c-termini").classList.toggle("invalid", !termini);
-    if(!privacy || !termini) ok = false;
+    document.getElementById("c-diffusione").classList.toggle("invalid", !diffusione);
+    if(!privacy || !diffusione) ok = false;
 
     if(!ok){
       feedback.textContent = "Controlla i campi evidenziati.";
@@ -260,23 +301,24 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       return;
     }
 
-    const dati = {
-      access_key: ACCESS_KEY,
-      subject: "Iscrizione Summer School — " + v("nome") + " " + v("cognome"),
-      from_name: "Summer School — modulo di iscrizione",
-      botcheck: document.getElementById("botcheck").checked,
-      "Nome": v("nome") + " " + v("cognome"),
-      "Data di nascita": v("nascita"),
-      "Luogo di nascita": v("luogonascita"),
-      "Nazionalità": v("nazionalita"),
-      "Codice fiscale": v("cf"),
-      "Email": v("email"),
-      "Telefono": v("telefono"),
-      "Residenza": v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
-      "Consenso privacy (GDPR)": "accettato",
-      "Termini e condizioni": "accettati",
-      "Newsletter": document.getElementById("newsletter").checked ? "sì" : "no"
-    };
+    const fd = new FormData();
+    fd.append("access_key", ACCESS_KEY);
+    fd.append("subject", "Pre-iscrizione Summer School — " + v("nome") + " " + v("cognome"));
+    fd.append("from_name", "Summer School — modulo di pre-iscrizione");
+    fd.append("botcheck", document.getElementById("botcheck").checked);
+    fd.append("Nome", v("nome") + " " + v("cognome"));
+    fd.append("Data di nascita", v("nascita"));
+    fd.append("Comune di nascita", v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""));
+    fd.append("Nazionalità", v("nazionalita"));
+    fd.append("Codice fiscale", v("cf"));
+    fd.append("Email", v("email"));
+    fd.append("Telefono", v("prefisso") + " " + v("numero"));
+    fd.append("Residenza", v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"));
+    fd.append("Consenso trattamento dati (D.Lgs. 196/2003)", "accettato");
+    fd.append("Consenso comunicazione e diffusione dati", "accettato");
+    for (const file of fileInput.files) {
+      fd.append("attachment[]", file);
+    }
 
     const btn = form.querySelector(".submit");
     btn.disabled = true;
@@ -285,13 +327,13 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     try {
       const r = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(dati)
+        headers: { "Accept": "application/json" },
+        body: fd
       });
       const out = await r.json();
       if(out.success){
         feedback.style.color = "#86d39a";
-        feedback.textContent = "✓ Candidatura inviata. Riceverai conferma via email.";
+        feedback.textContent = "✓ Pre-iscrizione inviata. Riceverai conferma via email.";
         form.reset();
       } else {
         feedback.style.color = "#ff6a5a";

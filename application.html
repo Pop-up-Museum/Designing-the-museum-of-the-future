@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Summer School — application form</title>
+<title>Summer School — pre-enrolment form</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
@@ -24,6 +24,7 @@ strong { color:#e8e4dc; font-weight:600; }
 em { color:#d4845a; font-style:normal; }
 footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
 
+/* form */
 .field { margin-bottom:1.1rem; }
 #dati { display:grid; grid-template-columns:1fr 1fr; column-gap:1rem; }
 #dati h2 { grid-column:1 / -1; }
@@ -40,6 +41,16 @@ input::placeholder, textarea::placeholder { color:rgba(232,228,220,0.28); }
 select option { background:#080808; }
 textarea { resize:vertical; min-height:130px; }
 .hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
+
+.tel-row { display:flex; gap:0.6rem; }
+.tel-row .prefisso { width:5.5rem; flex-shrink:0; }
+.tel-row .numero { flex:1; }
+
+input[type="file"] { padding:0.5rem 0.7rem; font-size:0.85rem; }
+input[type="file"]::file-selector-button {
+  background:rgba(232,228,220,0.1); color:#e8e4dc; border:none; border-radius:2px;
+  padding:0.4rem 0.8rem; margin-right:0.7rem; cursor:pointer; font-family:inherit; font-size:0.8rem;
+}
 
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
@@ -72,7 +83,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 <body>
 
 <div id="cookieBar">
-  <span>this site does not use tracking cookies: the only data we collect is what you provide us when applying. <a href="privacy-cookie-en.html">learn more</a></span>
+  <span>this site does not use tracking cookies: the only data we collect is what you provide us at pre-enrolment. <a href="privacy-cookie-en.html">learn more</a></span>
   <button id="cookieOk">got it</button>
 </div>
 <script>
@@ -99,9 +110,10 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 
 <main>
   <section id="top">
-    <h1>Application form</h1>
-    <p class="lead">Application to the Summer School <em>Designing the Museum of the Future</em>.</p>
+    <h1>Pre-enrolment</h1>
+    <p class="lead">Pre-enrolment request for the Summer School <em>Designing the Museum of the Future</em>.</p>
     <p class="facts"><span>Fondazione Pini · Milan</span><span>7–12 September 2026</span><span>ages 18–26</span></p>
+    <p class="facts"><span>Pre-enrolment deadline: 15 August 2026</span></p>
   </section>
 
   <form id="modulo" novalidate>
@@ -126,19 +138,19 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <div class="err">Required field.</div>
       </div>
       <div class="field half">
-        <label>Place of birth</label>
-        <input type="text" id="luogonascita" placeholder="city, country">
-      </div>
-
-      <div class="field half">
         <label>Nationality <span class="req">*</span></label>
         <input type="text" id="nazionalita">
         <div class="err">Required field.</div>
       </div>
+
       <div class="field half">
-        <label>Tax code</label>
-        <input type="text" id="cf" placeholder="if applicable">
-        <div class="hint">Italian codice fiscale — needed for invoicing in Italy.</div>
+        <label>Place of birth <span class="req">*</span></label>
+        <input type="text" id="comunenascita">
+        <div class="err">Required field.</div>
+      </div>
+      <div class="field half">
+        <label>Province / region of birth</label>
+        <input type="text" id="provincianascita" placeholder="if applicable">
       </div>
 
       <div class="field">
@@ -146,9 +158,13 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <input type="email" id="email" autocomplete="email">
         <div class="err">Enter a valid email.</div>
       </div>
+
       <div class="field">
         <label>Phone <span class="req">*</span></label>
-        <input type="tel" id="telefono" autocomplete="tel" placeholder="+39 …">
+        <div class="tel-row">
+          <input type="text" id="prefisso" class="prefisso" value="+39" autocomplete="tel-country-code">
+          <input type="tel" id="numero" class="numero" placeholder="phone number" autocomplete="tel-national">
+        </div>
         <div class="err">Required field.</div>
       </div>
 
@@ -157,19 +173,42 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <input type="text" id="via" placeholder="street and number" autocomplete="address-line1">
         <div class="err">Required field.</div>
       </div>
+      <div class="field">
+        <label>Address — line 2</label>
+        <input type="text" id="via2" placeholder="apartment, floor, other (optional)" autocomplete="address-line2">
+      </div>
+
       <div class="field half">
         <label>City <span class="req">*</span></label>
         <input type="text" id="citta" autocomplete="address-level2">
         <div class="err">Required field.</div>
       </div>
       <div class="field half">
+        <label>Province / State</label>
+        <input type="text" id="provincia" autocomplete="address-level1">
+      </div>
+
+      <div class="field half">
         <label>Postal code</label>
         <input type="text" id="cap" autocomplete="postal-code">
       </div>
-      <div class="field">
+      <div class="field half">
         <label>Country <span class="req">*</span></label>
         <input type="text" id="paese" autocomplete="country-name">
         <div class="err">Required field.</div>
+      </div>
+
+      <div class="field">
+        <label>Tax code</label>
+        <input type="text" id="cf" placeholder="Italian codice fiscale, if applicable">
+        <div class="hint">Needed for invoicing in Italy.</div>
+      </div>
+
+      <div class="field">
+        <label>Attach ID and tax code <span class="req">*</span></label>
+        <input type="file" id="documenti" accept="image/*,.pdf" multiple>
+        <div class="hint">You can attach more than one file (e.g. front and back of your ID). Images or PDF, max ~5MB total.</div>
+        <div class="err">Please attach at least one file.</div>
       </div>
     </section>
 
@@ -177,32 +216,28 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       <h2>consents</h2>
 
       <div class="note">
-        The data collected is used to assess your application and manage enrolment. Payment and invoicing take place <strong>after admission</strong>; details will be communicated separately.
+        This is a <strong>pre-enrolment</strong>: it is not yet a finalised enrolment. Payment and invoicing take place after admission; details will be communicated separately.
       </div>
 
       <details>
-        <summary>Data processing notice (GDPR)</summary>
+        <summary>Data processing notice</summary>
         <p>Data controller: <strong>Leonardo da Vinci S.r.l.</strong>, Via dei Cattaneo 14, 28100 Novara (NO), Italy — VAT/Tax code 01044700035.</p>
-        <p>Purpose: assessment of applications, enrolment management and, if admitted, contractual and invoicing obligations. Legal basis: consent and pre-contractual measures.</p>
-        <p>Your data is collected only at the point of application, through this form: no access logs, browsing data, or other data about your use of the site are recorded.</p>
+        <p>Purpose: pre-enrolment management and, if admitted, contractual and invoicing obligations. Legal basis: consent and pre-contractual measures.</p>
+        <p>Your data is collected only at the point of pre-enrolment, through this form: no access logs, browsing data, or other data about your use of the site are recorded.</p>
         <p>Cookies: this site does not use tracking or profiling cookies. No third-party cookies or traffic-analysis tools are set.</p>
-        <p>Data retention: for as long as needed to assess the application and, if admitted, for the administrative and tax obligations required by law. You have the right to access, rectify and erase your data, and to object to processing by writing to <a href="mailto:comunicazione@acmemilano.it" style="color:#d4845a;">comunicazione@acmemilano.it</a>.</p>
+        <p>Data retention: for as long as needed to process the pre-enrolment and, if admitted, for the administrative and tax obligations required by law. You have the right to access, rectify and erase your data, and to object to processing by writing to <a href="mailto:comunicazione@acmemilano.it" style="color:#d4845a;">comunicazione@acmemilano.it</a>.</p>
       </details>
 
       <div class="consent" id="c-privacy">
         <input type="checkbox" id="privacy">
-        <label for="privacy">I have read the notice and <strong>consent to the processing of my data</strong> for selection and enrolment purposes. <span class="req">*</span></label>
+        <label for="privacy">Pursuant to Italian <strong>Legislative Decree 196/2003</strong>, I consent to the <strong>processing of my personal data</strong>. <span class="req">*</span></label>
       </div>
-      <div class="consent" id="c-termini">
-        <input type="checkbox" id="termini">
-        <label for="termini">I accept the <strong>terms and conditions</strong> of participation. <span class="req">*</span></label>
-      </div>
-      <div class="consent">
-        <input type="checkbox" id="newsletter">
-        <label for="newsletter">I consent to receive communications about ACME and Fondazione Pini activities (optional).</label>
+      <div class="consent" id="c-diffusione">
+        <input type="checkbox" id="diffusione">
+        <label for="diffusione">I consent to the <strong>communication and disclosure of my personal data</strong> within the Summer School activities. <span class="req">*</span></label>
       </div>
 
-      <button type="submit" class="submit">Send application</button>
+      <button type="submit" class="submit">Send pre-enrolment</button>
       <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div id="feedback"></div>
     </section>
@@ -213,9 +248,14 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 </main>
 
 <script>
-  /* Web3Forms — same access key as the Italian form.
-     Submissions go to the email registered with this key. */
-  const ACCESS_KEY = "614955a3-cafc-496e-a83a-323313cfeaaf";
+  /* ====================================================================
+     ACCESS KEY TO REPLACE.
+     The previous key was registered to a personal email
+     (c.luca2002@gmail.com). Go to https://web3forms.com, register a new
+     access key with the official destination email, and paste it below
+     in place of the placeholder.
+     ==================================================================== */
+  const ACCESS_KEY = "PASTE-THE-NEW-ACCESS-KEY-HERE";
 
   const form = document.getElementById("modulo");
   const feedback = document.getElementById("feedback");
@@ -234,7 +274,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","email","telefono","via","citta","paese"];
+    const obbligatori = ["nome","cognome","nascita","nazionalita","comunenascita","email","numero","via","citta","paese"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
@@ -243,11 +283,16 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       if(invalido) ok = false;
     });
 
+    const fileInput = document.getElementById("documenti");
+    const haFile = fileInput.files && fileInput.files.length > 0;
+    segnaErrore("documenti", !haFile);
+    if(!haFile) ok = false;
+
     const privacy = document.getElementById("privacy").checked;
-    const termini = document.getElementById("termini").checked;
+    const diffusione = document.getElementById("diffusione").checked;
     document.getElementById("c-privacy").classList.toggle("invalid", !privacy);
-    document.getElementById("c-termini").classList.toggle("invalid", !termini);
-    if(!privacy || !termini) ok = false;
+    document.getElementById("c-diffusione").classList.toggle("invalid", !diffusione);
+    if(!privacy || !diffusione) ok = false;
 
     if(!ok){
       feedback.textContent = "Please check the highlighted fields.";
@@ -256,23 +301,24 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       return;
     }
 
-    const dati = {
-      access_key: ACCESS_KEY,
-      subject: "Summer School application — " + v("nome") + " " + v("cognome"),
-      from_name: "Summer School — application form",
-      botcheck: document.getElementById("botcheck").checked,
-      "Name": v("nome") + " " + v("cognome"),
-      "Date of birth": v("nascita"),
-      "Place of birth": v("luogonascita"),
-      "Nationality": v("nazionalita"),
-      "Tax code": v("cf"),
-      "Email": v("email"),
-      "Phone": v("telefono"),
-      "Address": v("via") + ", " + v("cap") + " " + v("citta") + " (" + v("paese") + ")",
-      "Privacy consent (GDPR)": "accepted",
-      "Terms and conditions": "accepted",
-      "Newsletter": document.getElementById("newsletter").checked ? "yes" : "no"
-    };
+    const fd = new FormData();
+    fd.append("access_key", ACCESS_KEY);
+    fd.append("subject", "Summer School pre-enrolment — " + v("nome") + " " + v("cognome"));
+    fd.append("from_name", "Summer School — pre-enrolment form");
+    fd.append("botcheck", document.getElementById("botcheck").checked);
+    fd.append("Name", v("nome") + " " + v("cognome"));
+    fd.append("Date of birth", v("nascita"));
+    fd.append("Place of birth", v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""));
+    fd.append("Nationality", v("nazionalita"));
+    fd.append("Tax code", v("cf"));
+    fd.append("Email", v("email"));
+    fd.append("Phone", v("prefisso") + " " + v("numero"));
+    fd.append("Address", v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"));
+    fd.append("Consent to data processing (Legislative Decree 196/2003)", "accepted");
+    fd.append("Consent to communication and disclosure of data", "accepted");
+    for (const file of fileInput.files) {
+      fd.append("attachment[]", file);
+    }
 
     const btn = form.querySelector(".submit");
     btn.disabled = true;
@@ -281,13 +327,13 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     try {
       const r = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(dati)
+        headers: { "Accept": "application/json" },
+        body: fd
       });
       const out = await r.json();
       if(out.success){
         feedback.style.color = "#86d39a";
-        feedback.textContent = "✓ Application sent. You'll receive a confirmation by email.";
+        feedback.textContent = "✓ Pre-enrolment sent. You'll receive a confirmation by email.";
         form.reset();
       } else {
         feedback.style.color = "#ff6a5a";
