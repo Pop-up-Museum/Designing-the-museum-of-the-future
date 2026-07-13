@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fondazione Pini</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background:#080808; overflow:hidden; height:100%; width:100%; }
+  #stage { position:fixed; inset:0; overflow:hidden; }
+  #track { position:absolute; left:0; top:0; width:100%; will-change:transform; }
+  .set { width:100%; }
+  .set img { display:block; width:100%; height:auto; }
+
+  #back {
+    position:fixed; top:1.2rem; left:1.2rem; z-index:5;
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(8,8,8,0.55); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:background .3s;
+  }
+  #back:hover { background:rgba(8,8,8,0.85); }
+  #back span {
+    display:block; width:9px; height:9px;
+    border-left:1.5px solid rgba(232,228,220,0.7);
+    border-bottom:1.5px solid rgba(232,228,220,0.7);
+    transform:rotate(45deg); margin-left:3px;
+  }
+</style>
+</head>
+<body>
+
+<a id="back" href="summer-school.html" aria-label="torna al programma"><span></span></a>
+
+<div id="stage">
+  <div id="track">
+    <div class="set" id="setA">
+      <img src="img/pini-01.jpg" alt="">
+      <img src="img/pini-02.jpg" alt="">
+      <img src="img/pini-03.jpg" alt="">
+      <img src="img/pini-04.jpg" alt="">
+      <img src="img/pini-05.jpg" alt="">
+      <img src="img/pini-06.jpg" alt="">
+      <img src="img/pini-07.jpg" alt="">
+      <img src="img/pini-08.jpg" alt="">
+      <img src="img/pini-09.jpg" alt="">
+      <img src="img/pini-10.jpg" alt="">
+      <img src="img/pini-11.jpg" alt="">
+    </div>
+    <div class="set" id="setB" aria-hidden="true">
+      <img src="img/pini-01.jpg" alt="">
+      <img src="img/pini-02.jpg" alt="">
+      <img src="img/pini-03.jpg" alt="">
+      <img src="img/pini-04.jpg" alt="">
+      <img src="img/pini-05.jpg" alt="">
+      <img src="img/pini-06.jpg" alt="">
+      <img src="img/pini-07.jpg" alt="">
+      <img src="img/pini-08.jpg" alt="">
+      <img src="img/pini-09.jpg" alt="">
+      <img src="img/pini-10.jpg" alt="">
+      <img src="img/pini-11.jpg" alt="">
+    </div>
+  </div>
+</div>
+
+<script>
+  const track = document.getElementById("track");
+  const setA = document.getElementById("setA");
+  const SPEED = 42; // px al secondo — regola qui per velocità diversa
+
+  let setHeight = 0;
+  let y = 0;
+  let last = null;
+
+  function measure() {
+    setHeight = setA.getBoundingClientRect().height;
+  }
+
+  function tick(t) {
+    if (last === null) last = t;
+    const dt = (t - last) / 1000;
+    last = t;
+    if (setHeight > 0) {
+      y -= SPEED * dt;
+      if (y <= -setHeight) y += setHeight;
+      track.style.transform = "translateY(" + y + "px)";
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const imgs = track.querySelectorAll("img");
+  let loaded = 0;
+  imgs.forEach(img => {
+    if (img.complete) { loaded++; }
+    else img.addEventListener("load", () => { loaded++; if (loaded === imgs.length) measure(); });
+  });
+  window.addEventListener("resize", measure);
+  window.addEventListener("load", measure);
+  measure();
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
