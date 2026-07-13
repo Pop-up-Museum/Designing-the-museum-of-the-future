@@ -210,6 +210,20 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <div class="hint">You can attach more than one file (e.g. front and back of your ID). Images or PDF, max ~5MB total.</div>
         <div class="err">Please attach at least one file.</div>
       </div>
+
+      <div class="field">
+        <label>Motivation letter (PDF) <span class="req">*</span></label>
+        <input type="file" id="lettera" accept="application/pdf">
+        <div class="hint">One PDF file.</div>
+        <div class="err">Please attach your motivation letter as a PDF.</div>
+      </div>
+
+      <div class="field">
+        <label>Portfolio or personal project (PDF) <span class="req">*</span></label>
+        <input type="file" id="portfolio" accept="application/pdf">
+        <div class="hint">One PDF file.</div>
+        <div class="err">Please attach your portfolio or personal project as a PDF.</div>
+      </div>
     </section>
 
     <section id="consensi">
@@ -288,6 +302,16 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     segnaErrore("documenti", !haFile);
     if(!haFile) ok = false;
 
+    const letteraInput = document.getElementById("lettera");
+    const haLettera = letteraInput.files && letteraInput.files.length > 0;
+    segnaErrore("lettera", !haLettera);
+    if(!haLettera) ok = false;
+
+    const portfolioInput = document.getElementById("portfolio");
+    const haPortfolio = portfolioInput.files && portfolioInput.files.length > 0;
+    segnaErrore("portfolio", !haPortfolio);
+    if(!haPortfolio) ok = false;
+
     const privacy = document.getElementById("privacy").checked;
     const diffusione = document.getElementById("diffusione").checked;
     document.getElementById("c-privacy").classList.toggle("invalid", !privacy);
@@ -319,6 +343,8 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     for (const file of fileInput.files) {
       fd.append("attachment[]", file);
     }
+    if (letteraInput.files[0]) fd.append("attachment[]", letteraInput.files[0]);
+    if (portfolioInput.files[0]) fd.append("attachment[]", portfolioInput.files[0]);
 
     const btn = form.querySelector(".submit");
     btn.disabled = true;
