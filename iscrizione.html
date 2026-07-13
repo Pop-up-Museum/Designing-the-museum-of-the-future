@@ -46,12 +46,6 @@ textarea { resize:vertical; min-height:130px; }
 .tel-row .prefisso { width:5.5rem; flex-shrink:0; }
 .tel-row .numero { flex:1; }
 
-input[type="file"] { padding:0.5rem 0.7rem; font-size:0.85rem; }
-input[type="file"]::file-selector-button {
-  background:rgba(232,228,220,0.1); color:#e8e4dc; border:none; border-radius:2px;
-  padding:0.4rem 0.8rem; margin-right:0.7rem; cursor:pointer; font-family:inherit; font-size:0.8rem;
-}
-
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
@@ -205,24 +199,29 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Allega carta d'identità e codice fiscale <span class="req">*</span></label>
-        <input type="file" id="documenti" accept="image/*,.pdf" multiple>
-        <div class="hint">Puoi allegare più file (es. fronte e retro del documento). Formati immagine o PDF, max ~5MB in totale.</div>
-        <div class="err">Allega almeno un file.</div>
+        <label>Documenti e allegati</label>
+        <div class="hint" style="margin-bottom:0.8rem;">
+          Carica i file richiesti su Google Drive o Dropbox e incolla qui i link. Ricordati di impostare la condivisione su <strong>"chiunque abbia il link può visualizzare"</strong>, altrimenti non potremo aprirli.
+        </div>
       </div>
 
       <div class="field">
-        <label>Lettera motivazionale (PDF) <span class="req">*</span></label>
-        <input type="file" id="lettera" accept="application/pdf">
-        <div class="hint">Un file PDF.</div>
-        <div class="err">Allega la lettera motivazionale in PDF.</div>
+        <label>Link a carta d'identità e codice fiscale <span class="req">*</span></label>
+        <input type="url" id="documenti" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
+        <div class="hint">Puoi caricare più file in un'unica cartella condivisa e incollare qui il link alla cartella.</div>
+        <div class="err">Inserisci un link valido.</div>
       </div>
 
       <div class="field">
-        <label>Portfolio o progetto personale (PDF) <span class="req">*</span></label>
-        <input type="file" id="portfolio" accept="application/pdf">
-        <div class="hint">Un file PDF.</div>
-        <div class="err">Allega il portfolio o progetto personale in PDF.</div>
+        <label>Link alla lettera motivazionale (PDF) <span class="req">*</span></label>
+        <input type="url" id="lettera" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
+        <div class="err">Inserisci un link valido.</div>
+      </div>
+
+      <div class="field">
+        <label>Link al portfolio o progetto personale (PDF) <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
+        <div class="err">Inserisci un link valido.</div>
       </div>
     </section>
 
@@ -264,16 +263,12 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 <script>
   /* ====================================================================
      ACCESS KEY DA SOSTITUIRE.
-     La chiave precedente era registrata sulla mail personale
-     (c.luca2002@gmail.com). Vai su https://web3forms.com, registra la
-     nuova access key con la mail ufficiale di destinazione, e incollala
-     qui sotto al posto del placeholder.
-     ==================================================================== */
-  /* ====================================================================
-     CHIAVE TEMPORANEA PER TEST — è la vecchia chiave (legata alla mail
-     personale c.luca2002@gmail.com). Serve solo per verificare che
-     l'invio funzioni; poi va sostituita con la chiave della mail
-     ufficiale definitiva.
+     Questa è ancora la vecchia chiave, registrata sulla mail personale
+     (c.luca2002@gmail.com), lasciata qui solo per test. Vai su
+     https://web3forms.com, registra una nuova access key con la mail
+     ufficiale di destinazione, e incollala qui sotto al posto di questa.
+     Con l'invio ora a soli campi di testo (niente allegati), la chiave
+     gratuita funziona senza bisogno di upgrade a Pro.
      ==================================================================== */
   const ACCESS_KEY = "614955a3-cafc-496e-a83a-323313cfeaaf";
 
@@ -304,19 +299,15 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     });
 
     const fileInput = document.getElementById("documenti");
-    const haFile = fileInput.files && fileInput.files.length > 0;
-    segnaErrore("documenti", !haFile);
-    if(!haFile) ok = false;
-
     const letteraInput = document.getElementById("lettera");
-    const haLettera = letteraInput.files && letteraInput.files.length > 0;
-    segnaErrore("lettera", !haLettera);
-    if(!haLettera) ok = false;
-
     const portfolioInput = document.getElementById("portfolio");
-    const haPortfolio = portfolioInput.files && portfolioInput.files.length > 0;
-    segnaErrore("portfolio", !haPortfolio);
-    if(!haPortfolio) ok = false;
+    function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
+
+    [["documenti", fileInput], ["lettera", letteraInput], ["portfolio", portfolioInput]].forEach(([id, el]) => {
+      const invalido = !urlValido(v(id));
+      segnaErrore(id, invalido);
+      if(invalido) ok = false;
+    });
 
     const privacy = document.getElementById("privacy").checked;
     const diffusione = document.getElementById("diffusione").checked;
@@ -331,26 +322,25 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       return;
     }
 
-    const fd = new FormData();
-    fd.append("access_key", ACCESS_KEY);
-    fd.append("subject", "Pre-iscrizione Summer School — " + v("nome") + " " + v("cognome"));
-    fd.append("from_name", "Summer School — modulo di pre-iscrizione");
-    fd.append("botcheck", document.getElementById("botcheck").checked);
-    fd.append("Nome", v("nome") + " " + v("cognome"));
-    fd.append("Data di nascita", v("nascita"));
-    fd.append("Comune di nascita", v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""));
-    fd.append("Nazionalità", v("nazionalita"));
-    fd.append("Codice fiscale", v("cf"));
-    fd.append("Email", v("email"));
-    fd.append("Telefono", v("prefisso") + " " + v("numero"));
-    fd.append("Residenza", v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"));
-    fd.append("Consenso trattamento dati (D.Lgs. 196/2003)", "accettato");
-    fd.append("Consenso comunicazione e diffusione dati", "accettato");
-    for (const file of fileInput.files) {
-      fd.append("attachment[]", file);
-    }
-    if (letteraInput.files[0]) fd.append("attachment[]", letteraInput.files[0]);
-    if (portfolioInput.files[0]) fd.append("attachment[]", portfolioInput.files[0]);
+    const dati = {
+      access_key: ACCESS_KEY,
+      subject: "Pre-iscrizione Summer School — " + v("nome") + " " + v("cognome"),
+      from_name: "Summer School — modulo di pre-iscrizione",
+      botcheck: document.getElementById("botcheck").checked,
+      "Nome": v("nome") + " " + v("cognome"),
+      "Data di nascita": v("nascita"),
+      "Comune di nascita": v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""),
+      "Nazionalità": v("nazionalita"),
+      "Codice fiscale": v("cf"),
+      "Email": v("email"),
+      "Telefono": v("prefisso") + " " + v("numero"),
+      "Residenza": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
+      "Link — carta d'identità e codice fiscale": v("documenti"),
+      "Link — lettera motivazionale": v("lettera"),
+      "Link — portfolio o progetto personale": v("portfolio"),
+      "Consenso trattamento dati (D.Lgs. 196/2003)": "accettato",
+      "Consenso comunicazione e diffusione dati": "accettato"
+    };
 
     const btn = form.querySelector(".submit");
     btn.disabled = true;
@@ -359,8 +349,8 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     try {
       const r = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: fd
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(dati)
       });
       const out = await r.json();
       if(out.success){

@@ -46,12 +46,6 @@ textarea { resize:vertical; min-height:130px; }
 .tel-row .prefisso { width:5.5rem; flex-shrink:0; }
 .tel-row .numero { flex:1; }
 
-input[type="file"] { padding:0.5rem 0.7rem; font-size:0.85rem; }
-input[type="file"]::file-selector-button {
-  background:rgba(232,228,220,0.1); color:#e8e4dc; border:none; border-radius:2px;
-  padding:0.4rem 0.8rem; margin-right:0.7rem; cursor:pointer; font-family:inherit; font-size:0.8rem;
-}
-
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
@@ -205,24 +199,29 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Attach ID and tax code <span class="req">*</span></label>
-        <input type="file" id="documenti" accept="image/*,.pdf" multiple>
-        <div class="hint">You can attach more than one file (e.g. front and back of your ID). Images or PDF, max ~5MB total.</div>
-        <div class="err">Please attach at least one file.</div>
+        <label>Documents and attachments</label>
+        <div class="hint" style="margin-bottom:0.8rem;">
+          Upload the required files to Google Drive or Dropbox and paste the links here. Make sure sharing is set to <strong>"anyone with the link can view"</strong>, otherwise we won't be able to open them.
+        </div>
       </div>
 
       <div class="field">
-        <label>Motivation letter (PDF) <span class="req">*</span></label>
-        <input type="file" id="lettera" accept="application/pdf">
-        <div class="hint">One PDF file.</div>
-        <div class="err">Please attach your motivation letter as a PDF.</div>
+        <label>Link to ID and tax code <span class="req">*</span></label>
+        <input type="url" id="documenti" placeholder="https://drive.google.com/... or https://dropbox.com/...">
+        <div class="hint">You can upload multiple files to a single shared folder and paste the folder link here.</div>
+        <div class="err">Enter a valid link.</div>
       </div>
 
       <div class="field">
-        <label>Portfolio or personal project (PDF) <span class="req">*</span></label>
-        <input type="file" id="portfolio" accept="application/pdf">
-        <div class="hint">One PDF file.</div>
-        <div class="err">Please attach your portfolio or personal project as a PDF.</div>
+        <label>Link to motivation letter (PDF) <span class="req">*</span></label>
+        <input type="url" id="lettera" placeholder="https://drive.google.com/... or https://dropbox.com/...">
+        <div class="err">Enter a valid link.</div>
+      </div>
+
+      <div class="field">
+        <label>Link to portfolio or personal project (PDF) <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://drive.google.com/... or https://dropbox.com/...">
+        <div class="err">Enter a valid link.</div>
       </div>
     </section>
 
@@ -267,7 +266,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
      The previous key was registered to a personal email
      (c.luca2002@gmail.com). Go to https://web3forms.com, register a new
      access key with the official destination email, and paste it below
-     in place of the placeholder.
+     in place of the placeholder. Since submissions are now text-only
+     (links instead of file uploads), the free plan works fine — no need
+     to upgrade to Pro.
      ==================================================================== */
   const ACCESS_KEY = "PASTE-THE-NEW-ACCESS-KEY-HERE";
 
@@ -298,19 +299,15 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     });
 
     const fileInput = document.getElementById("documenti");
-    const haFile = fileInput.files && fileInput.files.length > 0;
-    segnaErrore("documenti", !haFile);
-    if(!haFile) ok = false;
-
     const letteraInput = document.getElementById("lettera");
-    const haLettera = letteraInput.files && letteraInput.files.length > 0;
-    segnaErrore("lettera", !haLettera);
-    if(!haLettera) ok = false;
-
     const portfolioInput = document.getElementById("portfolio");
-    const haPortfolio = portfolioInput.files && portfolioInput.files.length > 0;
-    segnaErrore("portfolio", !haPortfolio);
-    if(!haPortfolio) ok = false;
+    function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
+
+    [["documenti", fileInput], ["lettera", letteraInput], ["portfolio", portfolioInput]].forEach(([id, el]) => {
+      const invalido = !urlValido(v(id));
+      segnaErrore(id, invalido);
+      if(invalido) ok = false;
+    });
 
     const privacy = document.getElementById("privacy").checked;
     const diffusione = document.getElementById("diffusione").checked;
@@ -325,26 +322,25 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       return;
     }
 
-    const fd = new FormData();
-    fd.append("access_key", ACCESS_KEY);
-    fd.append("subject", "Summer School pre-enrolment — " + v("nome") + " " + v("cognome"));
-    fd.append("from_name", "Summer School — pre-enrolment form");
-    fd.append("botcheck", document.getElementById("botcheck").checked);
-    fd.append("Name", v("nome") + " " + v("cognome"));
-    fd.append("Date of birth", v("nascita"));
-    fd.append("Place of birth", v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""));
-    fd.append("Nationality", v("nazionalita"));
-    fd.append("Tax code", v("cf"));
-    fd.append("Email", v("email"));
-    fd.append("Phone", v("prefisso") + " " + v("numero"));
-    fd.append("Address", v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"));
-    fd.append("Consent to data processing (Legislative Decree 196/2003)", "accepted");
-    fd.append("Consent to communication and disclosure of data", "accepted");
-    for (const file of fileInput.files) {
-      fd.append("attachment[]", file);
-    }
-    if (letteraInput.files[0]) fd.append("attachment[]", letteraInput.files[0]);
-    if (portfolioInput.files[0]) fd.append("attachment[]", portfolioInput.files[0]);
+    const dati = {
+      access_key: ACCESS_KEY,
+      subject: "Summer School pre-enrolment — " + v("nome") + " " + v("cognome"),
+      from_name: "Summer School — pre-enrolment form",
+      botcheck: document.getElementById("botcheck").checked,
+      "Name": v("nome") + " " + v("cognome"),
+      "Date of birth": v("nascita"),
+      "Place of birth": v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""),
+      "Nationality": v("nazionalita"),
+      "Tax code": v("cf"),
+      "Email": v("email"),
+      "Phone": v("prefisso") + " " + v("numero"),
+      "Address": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
+      "Link — ID and tax code": v("documenti"),
+      "Link — motivation letter": v("lettera"),
+      "Link — portfolio or personal project": v("portfolio"),
+      "Consent to data processing (Legislative Decree 196/2003)": "accepted",
+      "Consent to communication and disclosure of data": "accepted"
+    };
 
     const btn = form.querySelector(".submit");
     btn.disabled = true;
@@ -353,8 +349,8 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     try {
       const r = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Accept": "application/json" },
-        body: fd
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(dati)
       });
       const out = await r.json();
       if(out.success){
