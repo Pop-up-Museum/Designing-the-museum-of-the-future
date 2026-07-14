@@ -42,10 +42,6 @@ select option { background:#080808; }
 textarea { resize:vertical; min-height:130px; }
 .hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
 
-.tel-row { display:flex; gap:0.6rem; }
-.tel-row .prefisso { width:5.5rem; flex-shrink:0; }
-.tel-row .numero { flex:1; }
-
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
@@ -132,70 +128,39 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <div class="err">Campo obbligatorio.</div>
       </div>
       <div class="field half">
-        <label>Nazionalità <span class="req">*</span></label>
-        <input type="text" id="nazionalita">
+        <label>Luogo di nascita <span class="req">*</span></label>
+        <input type="text" id="luogonascita">
         <div class="err">Campo obbligatorio.</div>
-      </div>
-
-      <div class="field half">
-        <label>Comune di nascita <span class="req">*</span></label>
-        <input type="text" id="comunenascita">
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-      <div class="field half">
-        <label>Provincia di nascita</label>
-        <input type="text" id="provincianascita" placeholder="sigla o estero">
       </div>
 
       <div class="field">
-        <label>Email <span class="req">*</span></label>
+        <label>Stato di residenza <span class="req">*</span></label>
+        <input type="text" id="statoresidenza" autocomplete="country-name">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Indirizzo <span class="req">*</span></label>
+        <input type="text" id="indirizzo" autocomplete="street-address">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Contatto telefonico <span class="req">*</span></label>
+        <input type="tel" id="telefono" placeholder="+39 ..." autocomplete="tel">
+        <div class="err">Campo obbligatorio.</div>
+      </div>
+
+      <div class="field">
+        <label>Contatto mail <span class="req">*</span></label>
         <input type="email" id="email" autocomplete="email">
         <div class="err">Inserisci un'email valida.</div>
       </div>
 
       <div class="field">
-        <label>Telefono <span class="req">*</span></label>
-        <div class="tel-row">
-          <input type="text" id="prefisso" class="prefisso" value="+39" autocomplete="tel-country-code">
-          <input type="tel" id="numero" class="numero" placeholder="numero di telefono" autocomplete="tel-national">
-        </div>
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-
-      <div class="field">
-        <label>Indirizzo di residenza <span class="req">*</span></label>
-        <input type="text" id="via" placeholder="via e numero" autocomplete="address-line1">
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-      <div class="field">
-        <label>Indirizzo — riga 2</label>
-        <input type="text" id="via2" placeholder="scala, piano, altro (facoltativo)" autocomplete="address-line2">
-      </div>
-
-      <div class="field half">
-        <label>Città <span class="req">*</span></label>
-        <input type="text" id="citta" autocomplete="address-level2">
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-      <div class="field half">
-        <label>Provincia</label>
-        <input type="text" id="provincia" placeholder="sigla o estero" autocomplete="address-level1">
-      </div>
-
-      <div class="field half">
-        <label>CAP</label>
-        <input type="text" id="cap" autocomplete="postal-code">
-      </div>
-      <div class="field half">
-        <label>Paese <span class="req">*</span></label>
-        <input type="text" id="paese" autocomplete="country-name">
-        <div class="err">Campo obbligatorio.</div>
-      </div>
-
-      <div class="field">
-        <label>Link al portfolio o progetto personale <span class="req">*</span></label>
+        <label>Portfolio / lettera motivazionale (link) <span class="req">*</span></label>
         <input type="url" id="portfolio" placeholder="https://...">
-        <div class="hint">Un sito personale, una pagina Behance, una cartella condivisa — qualsiasi link dove poter vedere il tuo lavoro.</div>
+        <div class="hint">Un sito personale, una pagina Behance, una cartella condivisa — qualsiasi link dove poter vedere il tuo portfolio o leggere la tua lettera motivazionale.</div>
         <div class="err">Inserisci un link valido.</div>
       </div>
     </section>
@@ -265,7 +230,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","comunenascita","email","numero","via","citta","paese"];
+    const obbligatori = ["nome","cognome","nascita","luogonascita","statoresidenza","indirizzo","telefono","email"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
@@ -296,16 +261,17 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       subject: "Pre-iscrizione Summer School — " + v("nome") + " " + v("cognome"),
       from_name: "Summer School — modulo di pre-iscrizione",
       botcheck: document.getElementById("botcheck").checked,
-      "Nome": v("nome") + " " + v("cognome"),
+      "Nome": v("nome"),
+      "Cognome": v("cognome"),
       "Data di nascita": v("nascita"),
-      "Comune di nascita": v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""),
-      "Nazionalità": v("nazionalita"),
-      "Email": v("email"),
-      "Telefono": v("prefisso") + " " + v("numero"),
-      "Residenza": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
-      "Portfolio": v("portfolio"),
-      "Consenso trattamento dati (D.Lgs. 196/2003)": "accettato",
-      "Consenso comunicazione e diffusione dati": "accettato"
+      "Luogo di nascita": v("luogonascita"),
+      "Stato di residenza": v("statoresidenza"),
+      "Indirizzo": v("indirizzo"),
+      "Contatto telefonico": v("telefono"),
+      "Contatto mail": v("email"),
+      "Portfolio / lettera motivazionale": v("portfolio"),
+      "Consenso 1 — trattamento dati (D.Lgs. 196/2003)": "accettato",
+      "Consenso 2 — comunicazione e diffusione dati": "accettato"
     };
 
     const btn = form.querySelector(".submit");

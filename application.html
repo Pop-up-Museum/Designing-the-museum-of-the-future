@@ -42,10 +42,6 @@ select option { background:#080808; }
 textarea { resize:vertical; min-height:130px; }
 .hint { font-size:0.72rem; color:rgba(232,228,220,0.4); margin-top:0.3rem; }
 
-.tel-row { display:flex; gap:0.6rem; }
-.tel-row .prefisso { width:5.5rem; flex-shrink:0; }
-.tel-row .numero { flex:1; }
-
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
@@ -132,19 +128,27 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <div class="err">Required field.</div>
       </div>
       <div class="field half">
-        <label>Nationality <span class="req">*</span></label>
-        <input type="text" id="nazionalita">
+        <label>Place of birth <span class="req">*</span></label>
+        <input type="text" id="luogonascita">
         <div class="err">Required field.</div>
       </div>
 
-      <div class="field half">
-        <label>Place of birth <span class="req">*</span></label>
-        <input type="text" id="comunenascita">
+      <div class="field">
+        <label>Country of residence <span class="req">*</span></label>
+        <input type="text" id="statoresidenza" autocomplete="country-name">
         <div class="err">Required field.</div>
       </div>
-      <div class="field half">
-        <label>Province / region of birth</label>
-        <input type="text" id="provincianascita" placeholder="if applicable">
+
+      <div class="field">
+        <label>Address <span class="req">*</span></label>
+        <input type="text" id="indirizzo" autocomplete="street-address">
+        <div class="err">Required field.</div>
+      </div>
+
+      <div class="field">
+        <label>Phone <span class="req">*</span></label>
+        <input type="tel" id="telefono" placeholder="+39 ..." autocomplete="tel">
+        <div class="err">Required field.</div>
       </div>
 
       <div class="field">
@@ -154,48 +158,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Phone <span class="req">*</span></label>
-        <div class="tel-row">
-          <input type="text" id="prefisso" class="prefisso" value="+39" autocomplete="tel-country-code">
-          <input type="tel" id="numero" class="numero" placeholder="phone number" autocomplete="tel-national">
-        </div>
-        <div class="err">Required field.</div>
-      </div>
-
-      <div class="field">
-        <label>Home address <span class="req">*</span></label>
-        <input type="text" id="via" placeholder="street and number" autocomplete="address-line1">
-        <div class="err">Required field.</div>
-      </div>
-      <div class="field">
-        <label>Address — line 2</label>
-        <input type="text" id="via2" placeholder="apartment, floor, other (optional)" autocomplete="address-line2">
-      </div>
-
-      <div class="field half">
-        <label>City <span class="req">*</span></label>
-        <input type="text" id="citta" autocomplete="address-level2">
-        <div class="err">Required field.</div>
-      </div>
-      <div class="field half">
-        <label>Province / State</label>
-        <input type="text" id="provincia" autocomplete="address-level1">
-      </div>
-
-      <div class="field half">
-        <label>Postal code</label>
-        <input type="text" id="cap" autocomplete="postal-code">
-      </div>
-      <div class="field half">
-        <label>Country <span class="req">*</span></label>
-        <input type="text" id="paese" autocomplete="country-name">
-        <div class="err">Required field.</div>
-      </div>
-
-      <div class="field">
-        <label>Link to portfolio or personal project <span class="req">*</span></label>
+        <label>Portfolio / motivation letter (link) <span class="req">*</span></label>
         <input type="url" id="portfolio" placeholder="https://...">
-        <div class="hint">A personal site, a Behance page, a shared folder — any link where your work can be seen.</div>
+        <div class="hint">A personal site, a Behance page, a shared folder — any link where your portfolio or motivation letter can be seen.</div>
         <div class="err">Enter a valid link.</div>
       </div>
     </section>
@@ -265,7 +230,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
     feedback.textContent = "";
     let ok = true;
 
-    const obbligatori = ["nome","cognome","nascita","nazionalita","comunenascita","email","numero","via","citta","paese"];
+    const obbligatori = ["nome","cognome","nascita","luogonascita","statoresidenza","indirizzo","telefono","email"];
     obbligatori.forEach(id => {
       const vuoto = v(id) === "";
       let invalido = vuoto;
@@ -296,16 +261,17 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       subject: "Summer School pre-enrolment — " + v("nome") + " " + v("cognome"),
       from_name: "Summer School — pre-enrolment form",
       botcheck: document.getElementById("botcheck").checked,
-      "Name": v("nome") + " " + v("cognome"),
+      "First name": v("nome"),
+      "Last name": v("cognome"),
       "Date of birth": v("nascita"),
-      "Place of birth": v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""),
-      "Nationality": v("nazionalita"),
+      "Place of birth": v("luogonascita"),
+      "Country of residence": v("statoresidenza"),
+      "Address": v("indirizzo"),
+      "Phone": v("telefono"),
       "Email": v("email"),
-      "Phone": v("prefisso") + " " + v("numero"),
-      "Address": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
-      "Portfolio": v("portfolio"),
-      "Consent to data processing (Legislative Decree 196/2003)": "accepted",
-      "Consent to communication and disclosure of data": "accepted"
+      "Portfolio / motivation letter": v("portfolio"),
+      "Consent 1 — data processing (Legislative Decree 196/2003)": "accepted",
+      "Consent 2 — communication and disclosure of data": "accepted"
     };
 
     const btn = form.querySelector(".submit");
