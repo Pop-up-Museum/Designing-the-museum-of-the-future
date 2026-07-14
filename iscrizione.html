@@ -199,28 +199,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Documenti e allegati</label>
-        <div class="hint" style="margin-bottom:0.8rem;">
-          Carica i file richiesti su Google Drive o Dropbox e incolla qui i link. Ricordati di impostare la condivisione su <strong>"chiunque abbia il link può visualizzare"</strong>, altrimenti non potremo aprirli.
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Link a carta d'identità e codice fiscale <span class="req">*</span></label>
-        <input type="url" id="documenti" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
-        <div class="hint">Puoi caricare più file in un'unica cartella condivisa e incollare qui il link alla cartella.</div>
-        <div class="err">Inserisci un link valido.</div>
-      </div>
-
-      <div class="field">
-        <label>Link alla lettera motivazionale (PDF) <span class="req">*</span></label>
-        <input type="url" id="lettera" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
-        <div class="err">Inserisci un link valido.</div>
-      </div>
-
-      <div class="field">
-        <label>Link al portfolio o progetto personale (PDF) <span class="req">*</span></label>
-        <input type="url" id="portfolio" placeholder="https://drive.google.com/... oppure https://dropbox.com/...">
+        <label>Link al portfolio o progetto personale <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://...">
+        <div class="hint">Un sito personale, una pagina Behance, una cartella condivisa — qualsiasi link dove poter vedere il tuo lavoro.</div>
         <div class="err">Inserisci un link valido.</div>
       </div>
     </section>
@@ -251,6 +232,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <button type="submit" class="submit">Invia la pre-iscrizione</button>
+      <div class="hint" style="margin-top:0.6rem;">Se hai un ad-blocker o un'estensione per la privacy attiva, disattivala per questo sito: potrebbe impedire il corretto invio del modulo.</div>
       <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div id="feedback"></div>
     </section>
@@ -298,16 +280,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       if(invalido) ok = false;
     });
 
-    const fileInput = document.getElementById("documenti");
-    const letteraInput = document.getElementById("lettera");
-    const portfolioInput = document.getElementById("portfolio");
     function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
-
-    [["documenti", fileInput], ["lettera", letteraInput], ["portfolio", portfolioInput]].forEach(([id, el]) => {
-      const invalido = !urlValido(v(id));
-      segnaErrore(id, invalido);
-      if(invalido) ok = false;
-    });
+    segnaErrore("portfolio", !urlValido(v("portfolio")));
+    if(!urlValido(v("portfolio"))) ok = false;
 
     const privacy = document.getElementById("privacy").checked;
     const diffusione = document.getElementById("diffusione").checked;
@@ -335,9 +310,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       "Email": v("email"),
       "Telefono": v("prefisso") + " " + v("numero"),
       "Residenza": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
-      "Link — carta d'identità e codice fiscale": v("documenti"),
-      "Link — lettera motivazionale": v("lettera"),
-      "Link — portfolio o progetto personale": v("portfolio"),
+      "Portfolio": v("portfolio"),
       "Consenso trattamento dati (D.Lgs. 196/2003)": "accettato",
       "Consenso comunicazione e diffusione dati": "accettato"
     };

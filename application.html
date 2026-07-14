@@ -199,28 +199,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Documents and attachments</label>
-        <div class="hint" style="margin-bottom:0.8rem;">
-          Upload the required files to Google Drive or Dropbox and paste the links here. Make sure sharing is set to <strong>"anyone with the link can view"</strong>, otherwise we won't be able to open them.
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Link to ID and tax code <span class="req">*</span></label>
-        <input type="url" id="documenti" placeholder="https://drive.google.com/... or https://dropbox.com/...">
-        <div class="hint">You can upload multiple files to a single shared folder and paste the folder link here.</div>
-        <div class="err">Enter a valid link.</div>
-      </div>
-
-      <div class="field">
-        <label>Link to motivation letter (PDF) <span class="req">*</span></label>
-        <input type="url" id="lettera" placeholder="https://drive.google.com/... or https://dropbox.com/...">
-        <div class="err">Enter a valid link.</div>
-      </div>
-
-      <div class="field">
-        <label>Link to portfolio or personal project (PDF) <span class="req">*</span></label>
-        <input type="url" id="portfolio" placeholder="https://drive.google.com/... or https://dropbox.com/...">
+        <label>Link to portfolio or personal project <span class="req">*</span></label>
+        <input type="url" id="portfolio" placeholder="https://...">
+        <div class="hint">A personal site, a Behance page, a shared folder — any link where your work can be seen.</div>
         <div class="err">Enter a valid link.</div>
       </div>
     </section>
@@ -251,6 +232,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <button type="submit" class="submit">Send pre-enrolment</button>
+      <div class="hint" style="margin-top:0.6rem;">If you have an ad-blocker or a privacy extension enabled, please disable it for this site: it may prevent the form from submitting correctly.</div>
       <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div id="feedback"></div>
     </section>
@@ -298,16 +280,9 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       if(invalido) ok = false;
     });
 
-    const fileInput = document.getElementById("documenti");
-    const letteraInput = document.getElementById("lettera");
-    const portfolioInput = document.getElementById("portfolio");
     function urlValido(s){ try{ new URL(s); return true; }catch(e){ return false; } }
-
-    [["documenti", fileInput], ["lettera", letteraInput], ["portfolio", portfolioInput]].forEach(([id, el]) => {
-      const invalido = !urlValido(v(id));
-      segnaErrore(id, invalido);
-      if(invalido) ok = false;
-    });
+    segnaErrore("portfolio", !urlValido(v("portfolio")));
+    if(!urlValido(v("portfolio"))) ok = false;
 
     const privacy = document.getElementById("privacy").checked;
     const diffusione = document.getElementById("diffusione").checked;
@@ -335,9 +310,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       "Email": v("email"),
       "Phone": v("prefisso") + " " + v("numero"),
       "Address": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
-      "Link — ID and tax code": v("documenti"),
-      "Link — motivation letter": v("lettera"),
-      "Link — portfolio or personal project": v("portfolio"),
+      "Portfolio": v("portfolio"),
       "Consent to data processing (Legislative Decree 196/2003)": "accepted",
       "Consent to communication and disclosure of data": "accepted"
     };
