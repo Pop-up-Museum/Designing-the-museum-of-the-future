@@ -193,12 +193,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       </div>
 
       <div class="field">
-        <label>Tax code</label>
-        <input type="text" id="cf" placeholder="Italian codice fiscale, if applicable">
-        <div class="hint">Needed for invoicing in Italy.</div>
-      </div>
-
-      <div class="field">
         <label>Link to portfolio or personal project <span class="req">*</span></label>
         <input type="url" id="portfolio" placeholder="https://...">
         <div class="hint">A personal site, a Behance page, a shared folder — any link where your work can be seen.</div>
@@ -306,7 +300,6 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       "Date of birth": v("nascita"),
       "Place of birth": v("comunenascita") + (v("provincianascita") ? " (" + v("provincianascita") + ")" : ""),
       "Nationality": v("nazionalita"),
-      "Tax code": v("cf"),
       "Email": v("email"),
       "Phone": v("prefisso") + " " + v("numero"),
       "Address": v("via") + (v("via2") ? ", " + v("via2") : "") + ", " + v("cap") + " " + v("citta") + (v("provincia") ? " (" + v("provincia") + ")" : "") + " — " + v("paese"),
