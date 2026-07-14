@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creativo Milano — Design &amp; Build Studio</title>
+<meta name="description" content="Creativo Milano designs, builds and maintains museums, theme parks, monuments and urban landmarks around the world.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23FCB040'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF8F3; --white:#FFFFFF; --ink:#18181A; --ink-soft:#5C5C57; --line:#E5E1D6;
+    --red:#BF1E2E; --orange:#F1592A; --yellow:#FCB040; --green:#8CC63F; --azure:#25AAE1; --blue:#0F75BC;
+    --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-body);color:var(--ink);background:var(--cream);line-height:1.6;overflow-x:hidden;}
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;}
+  ul{list-style:none;}
+  section{position:relative;}
+
+  /* ---------- progress bar (signature element) ---------- */
+  .progress-bar{position:fixed;top:0;left:0;height:4px;width:0%;z-index:1000;
+    background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow),var(--green),var(--azure),var(--blue));
+    transition:width .12s linear;}
+
+  /* ---------- reveal-on-scroll ---------- */
+  [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+  [data-reveal].in-view{opacity:1;transform:translateY(0);}
+
+  /* ---------- nav ---------- */
+  .nav{position:fixed;top:4px;left:0;width:100%;z-index:900;display:flex;align-items:center;justify-content:space-between;
+    padding:24px 6%;transition:background .3s ease,padding .3s ease,box-shadow .3s ease;}
+  .nav.scrolled{background:rgba(250,248,243,.92);backdrop-filter:blur(10px);padding:16px 6%;box-shadow:0 1px 0 var(--line);}
+  .logo{font-family:var(--font-display);font-weight:700;font-size:1.15rem;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:.5rem;}
+  .logo span{color:var(--blue);font-weight:500;}
+  .logo-mark{height:26px;width:auto;}
+  .nav-links{display:flex;align-items:center;gap:2.4rem;}
+  .nav-links a{font-family:var(--font-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;opacity:.7;transition:opacity .2s ease;}
+  .nav-links a:hover{opacity:1;}
+  .nav-cta{font-family:var(--font-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;padding:.6rem 1.2rem;
+    border:1px solid var(--ink);border-radius:30px;text-decoration:none;transition:background .25s ease,color .25s ease;}
+  .nav-cta:hover{background:var(--ink);color:var(--cream);}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;width:28px;height:20px;position:relative;}
+  .nav-toggle span{position:absolute;left:0;width:100%;height:2px;background:var(--ink);transition:transform .25s ease,opacity .25s ease;}
+  .nav-toggle span:nth-child(1){top:0;} .nav-toggle span:nth-child(2){top:9px;} .nav-toggle span:nth-child(3){top:18px;}
+  .nav-toggle.open span:nth-child(1){transform:translateY(9px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-9px) rotate(-45deg);}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:100vh;display:flex;align-items:center;padding:0 6%;}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center;width:100%;padding-top:5rem;}
+  .eyebrow{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);
+    margin-bottom:1.6rem;display:flex;align-items:center;gap:.6rem;}
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);}
+  .hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.5rem,6.4vw,5rem);line-height:1.03;
+    letter-spacing:-.02em;margin-bottom:1.8rem;}
+  .hero h1 .word{display:inline-block;opacity:0;transform:translateY(18px);animation:word-in .7s ease forwards;
+    animation-delay:calc(var(--i) * .07s);}
+  @keyframes word-in{to{opacity:1;transform:translateY(0);}}
+  .hero p.sub{font-size:1.1rem;color:var(--ink-soft);max-width:520px;margin-bottom:2.4rem;}
+  .hero-actions{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+  .btn-primary{font-family:var(--font-mono);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;
+    background:var(--yellow);color:var(--ink);padding:1rem 1.8rem;border-radius:40px;text-decoration:none;
+    display:inline-block;transition:transform .25s ease,box-shadow .25s ease;}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 24px -12px rgba(0,0,0,.25);}
+  .btn-text{font-family:var(--font-mono);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;
+    border-bottom:1px solid var(--ink);padding-bottom:3px;transition:opacity .2s ease;}
+  .btn-text:hover{opacity:.6;}
+
+  .hero-photo{position:relative;height:420px;border-radius:20px;overflow:hidden;}
+  .hero-photo img,.hero-photo video{width:100%;height:100%;object-fit:cover;}
+  .hero-photo::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(165deg,rgba(15,117,188,.22),rgba(191,30,46,0) 60%);}
+  .hero-photo-tag{position:absolute;left:16px;bottom:16px;background:rgba(250,248,243,.92);backdrop-filter:blur(6px);
+    padding:.5rem .9rem;border-radius:30px;font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;
+    letter-spacing:.04em;}
+
+  /* ---------- services ---------- */
+  .services{padding:8rem 6% 6rem;}
+  .section-head{max-width:620px;margin-bottom:3.6rem;}
+  .section-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.01em;}
+  .service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;}
+  .service-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:2.1rem 1.7rem;
+    position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease;text-decoration:none;display:block;}
+  .service-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:var(--c);
+    transform:scaleX(0);transform-origin:left;transition:transform .35s ease;}
+  .service-card:hover{transform:translateY(-6px);box-shadow:0 18px 32px -18px rgba(0,0,0,.14);}
+  .service-card:hover::before{transform:scaleX(1);}
+  .service-icon{width:38px;height:38px;color:var(--c);margin-bottom:1.4rem;}
+  .service-card h3{font-family:var(--font-display);font-weight:600;font-size:1.1rem;margin-bottom:.55rem;}
+  .service-card p{font-size:.92rem;color:var(--ink-soft);}
+  .service-tag{font-family:var(--font-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--c);margin-top:1.2rem;display:inline-block;}
+
+  /* ---------- work / projects ---------- */
+  .work{padding:6rem 6%;background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem;margin-top:3rem;}
+  .project-card{border-radius:16px;overflow:hidden;aspect-ratio:4/3;position:relative;background:var(--ink);}
+  .project-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+  .project-card:hover img{transform:scale(1.06);}
+  .project-card::after{content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.65) 100%);}
+  .project-label{position:absolute;left:0;right:0;bottom:0;padding:1rem 1.1rem;z-index:2;}
+  .project-label .name{font-family:var(--font-display);font-weight:600;font-size:.95rem;color:#fff;}
+  .project-label .meta{font-family:var(--font-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--c);margin-top:.25rem;}
+  .work-note{font-size:.84rem;color:var(--ink-soft);margin-top:2.2rem;font-style:italic;}
+  .list-divider{font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--ink-soft);margin:2.4rem auto .8rem;max-width:800px;text-align:left;}
+  .work-list{max-width:800px;margin:0 auto;display:flex;flex-direction:column;}
+  .work-row{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;border-bottom:1px solid var(--line);
+    transition:padding-left .25s ease;opacity:.8;text-decoration:none;color:inherit;}
+  .work-row:first-child{border-top:1px solid var(--line);}
+  .work-row:hover{padding-left:.6rem;}
+  .work-name{display:flex;align-items:center;gap:.9rem;font-family:var(--font-display);font-weight:500;font-size:.98rem;}
+  .work-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+  .work-name .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-soft);flex-shrink:0;}
+  .work-meta{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);}
+
+  /* ---------- numbers ---------- */
+  .numbers{padding:7rem 6%;}
+  .numbers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;max-width:920px;margin:0 auto;text-align:center;}
+  .numbers-eyebrow{text-align:center;font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ink-soft);margin-bottom:2.4rem;}
+  .number{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,4.6vw,3.4rem);}
+  .number-label{font-family:var(--font-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-top:.5rem;}
+
+  /* ---------- cta ---------- */
+  .cta{padding:8rem 6%;background:var(--blue);color:var(--cream);overflow:hidden;}
+  .cta::before{content:'';position:absolute;inset:-30%;
+    background:conic-gradient(from 0deg,var(--red),var(--orange),var(--yellow),var(--green),var(--azure),var(--blue),var(--red));
+    opacity:.16;filter:blur(70px);animation:spin 32s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .cta-content{position:relative;z-index:2;max-width:680px;}
+  .cta h2{font-family:var(--font-display);font-weight:700;font-size:clamp(2.1rem,5vw,3.4rem);margin-bottom:1.2rem;}
+  .cta p{font-size:1.05rem;opacity:.85;max-width:480px;margin-bottom:2.2rem;}
+  .cta-contact{margin-top:3rem;display:flex;gap:2.4rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.82rem;opacity:.85;}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--ink);color:rgba(255,255,255,.62);padding:3rem 6% 2rem;font-size:.85rem;}
+  .footer-top{display:flex;flex-direction:column;align-items:flex-start;gap:1.6rem;
+    padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.12);}
+  .footer-logo{display:flex;align-items:center;gap:.7rem;}
+  .footer-logo img{height:44px;width:auto;}
+  .footer-logo .wordmark{font-family:var(--font-display);color:#fff;font-weight:700;font-size:1.4rem;}
+  .footer-nav-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;width:100%;}
+  .footer-links{display:flex;gap:1.8rem;flex-wrap:wrap;}
+  .footer-links a{text-decoration:none;font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;opacity:.8;}
+  .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding-top:1.6rem;}
+  .footer-bottom a{text-decoration:underline;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-photo{height:240px;order:-1;}
+    .nav-links,.nav-cta{display:none;}
+    .nav-toggle{display:block;}
+    .nav.open .nav-links{display:flex;position:absolute;top:64px;left:0;width:100%;background:var(--cream);
+      flex-direction:column;gap:0;padding:1rem 6% 1.6rem;border-bottom:1px solid var(--line);}
+    .nav.open .nav-links a{padding:.7rem 0;opacity:1;}
+    .nav.open .nav-cta{display:inline-block;margin:0 6% 1.6rem;}
+  }
+
+  /* ---------- lightbox ---------- */
+  .lightbox-overlay{position:fixed;inset:0;background:rgba(10,10,10,.92);z-index:9999;
+    display:flex;align-items:center;justify-content:center;padding:5vh 5vw;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .lightbox-overlay.open{opacity:1;pointer-events:auto;}
+  .lightbox-overlay img{max-width:100%;max-height:100%;border-radius:8px;
+    box-shadow:0 24px 70px rgba(0,0,0,.5);}
+  .lightbox-close,.lightbox-nav{position:absolute;border:none;color:#fff;cursor:pointer;
+    background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;
+    transition:background .2s ease,transform .2s ease;}
+  .lightbox-close:hover,.lightbox-nav:hover{background:rgba(255,255,255,.25);}
+  .lightbox-close{top:24px;right:24px;width:44px;height:44px;border-radius:50%;}
+  .lightbox-nav{top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;}
+  .lightbox-nav:hover{transform:translateY(-50%) scale(1.06);}
+  .lightbox-prev{left:16px;} .lightbox-next{right:16px;}
+  .lightbox-close svg,.lightbox-nav svg{width:20px;height:20px;}
+  @media (max-width:600px){
+    .lightbox-nav{width:38px;height:38px;} .lightbox-close{width:38px;height:38px;top:14px;right:14px;}
+    .lightbox-prev{left:8px;} .lightbox-next{right:8px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    [data-reveal]{opacity:1!important;transform:none!important;transition:none!important;}
+    .hero h1 .word{animation:none;opacity:1;transform:none;}
+    .cta::before{animation:none;}
+    .progress-bar{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#hero">Creativo<span>Milano</span></a>
+  <nav class="nav-links">
+    <a href="#services">Studio</a>
+    <a href="#work">Work</a>
+    <a href="#numbers">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="nav-cta start-project-btn" href="#contact">Start a project</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <p class="eyebrow">Design &amp; build studio — Milano</p>
+        <h1 id="heroTitle">We engineer wonder.</h1>
+        <p class="sub">Creativo designs, builds and maintains museums, theme parks, monuments and urban landmarks — turning ambitious ideas into places people remember.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="#work">View our work</a>
+          <a class="btn-text" href="#contact">Get in touch →</a>
+        </div>
+      </div>
+
+      <!-- Hero video: silent looping background clip, poster shown until the video is ready. -->
+      <div class="hero-photo">
+        <video autoplay muted loop playsinline poster="images/hero-scene-poster.jpg">
+          <source src="images/hero-scene.mp4" type="video/mp4">
+        </video>
+        <span class="hero-photo-tag">Digital Experience Museum</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="services" id="services">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow" style="color:var(--azure)">What we do</p>
+      <h2>Five disciplines. One studio.</h2>
+    </div>
+    <div class="service-grid">
+
+      <a href="museums.html" class="service-card" style="--c:var(--blue)" data-reveal>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 3l9 6"/><path d="M5 9v10M9 9v10M15 9v10M19 9v10"/><path d="M3 19h18"/></svg>
+        <h3>Museums</h3>
+        <p>Interactive worlds where history comes alive through digital experience.</p>
+        <span class="service-tag">Museums</span>
+      </a>
+
+      <a href="theme-parks.html" class="service-card" style="--c:var(--orange)" data-reveal>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="11" r="7"/><path d="M12 4v14M5 11h14M7.5 5.5l9 11M16.5 5.5l-9 11"/><path d="M9 21h6"/></svg>
+        <h3>Theme parks</h3>
+        <p>Rides, lands and stories engineered for pure delight.</p>
+        <span class="service-tag">Theme parks</span>
+      </a>
+
+      <a href="monuments.html" class="service-card" style="--c:var(--red)" data-reveal>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21V9l2-5 2 5v12"/><path d="M7 21h10"/></svg>
+        <h3>Monuments</h3>
+        <p>Landmarks that carry memory and meaning into the skyline.</p>
+        <span class="service-tag">Monuments</span>
+      </a>
+
+      <a href="urban-architecture.html" class="service-card" style="--c:var(--azure)" data-reveal>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V11h4v10M9 21V6h4v15M15 21V14h4v7"/><path d="M3 21h18"/></svg>
+        <h3>Urban architecture</h3>
+        <p>Civic spaces and structures that shape how cities live.</p>
+        <span class="service-tag">Urban architecture</span>
+      </a>
+
+      <a href="park-maintenance.html" class="service-card" style="--c:var(--green)" data-reveal>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18v-2a8 8 0 0 1 16 0v2"/><path d="M2 18h20"/><path d="M12 10V6"/></svg>
+        <h3>Park maintenance</h3>
+        <p>Year-round care that keeps every attraction running at its best.</p>
+        <span class="service-tag">Maintenance</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ================= WORK ================= -->
+  <section class="work" id="work">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow" style="color:var(--red)">Selected work</p>
+      <h2>Built around the world.</h2>
+    </div>
+    <div class="project-grid">
+
+      <!-- Real project photography with full case studies. Swap src="images/..." to update a photo. -->
+
+      <a class="project-card" href="dante-immersive.html" style="--c:var(--red)" data-reveal>
+        <img src="images/hero-vr.jpg" alt="Visitor wearing a VR headset inside the Dante Immersive experience" loading="lazy">
+        <div class="project-label"><div class="name">Dante Immersive ★ Flagship</div><div class="meta">Museums · Florence, Italy</div></div>
+      </a>
+
+      <a href="independence-monument-uzb.html" class="project-card" style="--c:var(--red)" data-reveal>
+        <img src="images/Özbekistan Bagimsizlik Aniti (1).jpg" alt="Independence Monument in Tashkent" loading="lazy">
+        <div class="project-label"><div class="name">Independence Monument</div><div class="meta">Monuments · Tashkent, Uzbekistan</div></div>
+      </a>
+
+      <a href="july-martyrs-monument-tr.html" class="project-card" style="--c:var(--red)" data-reveal>
+        <img src="images/july_martyrs_monument_04_01.jpg" alt="July 15 Martyrs' Monument illuminated at dusk" loading="lazy">
+        <div class="project-label"><div class="name">July 15 Martyrs' Monument</div><div class="meta">Monuments · Ankara, Türkiye</div></div>
+      </a>
+
+      <a href="ddm.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/ddm-museum.jpeg" alt="Immersive screens inside the DDM digital experience museum" loading="lazy">
+        <div class="project-label"><div class="name">DDM — Digital Experience Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="gallipoli-museum-bagcilar-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/canakkale zafer muzesi (3).jpg" alt="Bağcılar Gallipoli Museum" loading="lazy">
+        <div class="project-label"><div class="name">Bağcılar Gallipoli Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="state-history-museum-uzb.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/OZBEKISTAN DEVLET TARİHİ MUZE (3).jpg" alt="State History Museum" loading="lazy">
+        <div class="project-label"><div class="name">State History Museum</div><div class="meta">Museums · Uzbekistan</div></div>
+      </a>
+
+      <a href="tea-museum-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/Çay Müzesi (9).jpg" alt="Tea Museum" loading="lazy">
+        <div class="project-label"><div class="name">Tea Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="july-15-democracy-museum-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/15 temmuz agac.jpg" alt="July 15 Democracy Museum" loading="lazy">
+        <div class="project-label"><div class="name">July 15 Democracy Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="icc-uzb.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/ICC (5).jpg" alt="ICC" loading="lazy">
+        <div class="project-label"><div class="name">ICC</div><div class="meta">Museums · Uzbekistan</div></div>
+      </a>
+
+      <a href="democracy-freedoms-island-museum-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/demokrasi ve ozgurlukler muzesi yassıada (3).jpg" alt="Democracy and Freedoms Island Museum" loading="lazy">
+        <div class="project-label"><div class="name">Democracy and Freedoms Island Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="imam-bukhari-museum-uzb.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/250910_SALON 2 (002).jpg" alt="Imam Bukhari Museum" loading="lazy">
+        <div class="project-label"><div class="name">Imam Bukhari Museum</div><div class="meta">Museums · Uzbekistan</div></div>
+      </a>
+
+      <a href="konya-war-independence-museum-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/m1.jpg" alt="Konya War of Independence Museum" loading="lazy">
+        <div class="project-label"><div class="name">Konya War of Independence Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+      <a href="osmaniye-city-museum-tr.html" class="project-card" style="--c:var(--blue)" data-reveal>
+        <img src="images/muze-osmaniye.jpg" alt="Osmaniye City Museum" loading="lazy">
+        <div class="project-label"><div class="name">Osmaniye City Museum</div><div class="meta">Museums · Türkiye</div></div>
+      </a>
+
+    </div>
+
+    <p class="list-divider">More completed projects</p>
+    <div class="work-list simple" data-reveal>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/phaetonia-land.jpeg" alt="">Phaetonia Land</div>
+        <div class="work-meta">Theme parks</div>
+      </div>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/karabakh-monument.jpeg" alt="">Karabakh Monument</div>
+        <div class="work-meta">Monuments · Azerbaijan</div>
+      </div>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/festival-city.jpeg" alt="">Festival City</div>
+        <div class="work-meta">Urban architecture</div>
+      </div>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/campus-park.jpeg" alt="">Campus Park</div>
+        <div class="work-meta">Urban architecture</div>
+      </div>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/kids-town.jpeg" alt="">Kids Town</div>
+        <div class="work-meta">Theme parks</div>
+      </div>
+      <div class="work-row">
+        <div class="work-name"><img class="work-thumb" src="images/aqua-park.jpeg" alt="">Aqua Park Resort</div>
+        <div class="work-meta">Theme parks</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= NUMBERS ================= -->
+  <section class="numbers" id="numbers">
+    <p class="numbers-eyebrow">As part of the Outdoor Factory group</p>
+    <div class="numbers-grid">
+      <div data-reveal>
+        <div class="number" data-count="385">0</div>
+        <div class="number-label">Projects designed &amp; realized</div>
+      </div>
+      <div data-reveal>
+        <div class="number" data-count="25">0</div>
+        <div class="number-label">Museums</div>
+      </div>
+      <div data-reveal>
+        <div class="number" data-count="110">0</div>
+        <div class="number-label">Monuments &amp; statues</div>
+      </div>
+      <div data-reveal>
+        <div class="number" data-count="15">0</div>
+        <div class="number-label">Business partners · Europe, America, Asia</div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:2.4rem;font-family:var(--font-mono);font-size:.8rem;">
+      <a href="company-profile.html" style="text-decoration:underline;color:var(--blue);">View our full company profile →</a>
+    </p>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="contact">
+    <div class="cta-content" data-reveal>
+      <h2>Let's build something unforgettable.</h2>
+      <p>Tell us about your space — we'll show you what it could become.</p>
+      <a class="btn-primary start-project-btn" href="#contact">Start a project</a>
+      <div class="cta-contact">
+        <span>Via Sant'Orsola 8/A, Milan, Italy</span>
+        <span>+39 02 84719 247</span>
+        <span>info@creativomilano.it</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><img src="images/Logo1.png" alt=""><span class="wordmark">Creativo Milano</span></div>
+    <div class="footer-nav-row">
+      <div class="footer-links">
+        <a href="#services">Studio</a>
+        <a href="#work">Work</a>
+        <a href="#numbers">About</a>
+        <a href="company-profile.html">Company Profile</a>
+        <a href="cookie-policy.html">Cookie Policy</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Creativo Milano. All rights reserved.</span>
+    <span>Part of the <a href="https://www.outdoorfactory.com" target="_blank" rel="noopener">Outdoor Factory</a> group</span>
+  </div>
+</footer>
+
+<script>
+  // wrap hero headline words for staggered entrance
+  const heroTitle = document.getElementById('heroTitle');
+  heroTitle.innerHTML = heroTitle.textContent.trim().split(' ')
+    .map((w,i)=>`<span class="word" style="--i:${i}">${w}</span>`).join(' ');
+
+  // nav scroll state + scroll progress bar
+  const nav = document.getElementById('nav');
+  const bar = document.getElementById('progressBar');
+  function onScroll(){
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = max > 0 ? (window.scrollY / max * 100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // mobile nav toggle
+  const toggle = document.getElementById('navToggle');
+  toggle.addEventListener('click', ()=>{
+    nav.classList.toggle('open');
+    toggle.classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-links a, .nav-cta').forEach(a=>{
+    a.addEventListener('click', ()=>{ nav.classList.remove('open'); toggle.classList.remove('open'); });
+  });
+
+  // reveal-on-scroll
+  const reveal = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((entry, idx)=>{
+      if(entry.isIntersecting){
+        entry.target.style.transitionDelay = (idx % 6) * 0.06 + 's';
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.15});
+  reveal.forEach(el=>io.observe(el));
+
+  // count-up for numeric stats
+  const counters = document.querySelectorAll('[data-count]');
+  const cio = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseInt(el.dataset.count, 10);
+        const duration = 900;
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = Math.round(p * target);
+          if(p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        cio.unobserve(el);
+      }
+    });
+  }, {threshold:.5});
+  counters.forEach(el=>cio.observe(el));
+
+  // ---------- lightbox: click any gallery photo to view it larger, arrows/keys to browse ----------
+  (function(){
+    const items = Array.from(document.querySelectorAll('.project-grid img, .gallery-grid img'));
+    if(!items.length) return;
+    let current = 0;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay';
+    overlay.innerHTML = `
+      <button class="lightbox-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <button class="lightbox-nav lightbox-prev" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <img src="" alt="">
+      <button class="lightbox-nav lightbox-next" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>`;
+    document.body.appendChild(overlay);
+
+    const imgEl = overlay.querySelector('img');
+    const closeBtn = overlay.querySelector('.lightbox-close');
+    const prevBtn = overlay.querySelector('.lightbox-prev');
+    const nextBtn = overlay.querySelector('.lightbox-next');
+
+    function show(i){
+      current = (i + items.length) % items.length;
+      imgEl.src = items[current].currentSrc || items[current].src;
+      imgEl.alt = items[current].alt || '';
+    }
+    function openBox(i){ show(i); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeBox(){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    items.forEach((img, i) => {
+      if(img.closest('a[href]')) return; // leave real project links (e.g. Dante card) to navigate normally
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => openBox(i));
+    });
+
+    closeBtn.addEventListener('click', closeBox);
+    overlay.addEventListener('click', (e) => { if(e.target === overlay) closeBox(); });
+    prevBtn.addEventListener('click', () => show(current - 1));
+    nextBtn.addEventListener('click', () => show(current + 1));
+    document.addEventListener('keydown', (e) => {
+      if(!overlay.classList.contains('open')) return;
+      if(e.key === 'Escape') closeBox();
+      if(e.key === 'ArrowLeft') show(current - 1);
+      if(e.key === 'ArrowRight') show(current + 1);
+    });
+  })();
+</script>
+<script src="project-intake.js"></script>
+<script src="cookie-consent.js"></script>
+
+</body>
+</html>
