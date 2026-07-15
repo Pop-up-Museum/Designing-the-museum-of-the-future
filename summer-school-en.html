@@ -7,33 +7,40 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
-nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.9rem 0; display:flex; flex-wrap:wrap; gap:1.3rem; font-size:0.7rem; letter-spacing:0.05em; }
-nav a { color:rgba(232,228,220,0.4); text-decoration:none; }
-nav a:hover { color:#d4845a; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.88rem; letter-spacing:0.03em; }
+.nav-links { display:flex; flex-wrap:wrap; gap:1.5rem; }
+.nav-lang { display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:500; }
+nav a { color:rgba(232,228,220,0.7); text-decoration:none; font-weight:500; }
+nav a:hover { color:#ffffff; text-decoration:underline; }
 main { max-width:64ch; margin:0 auto; }
 section { padding:3rem 0; border-bottom:1px solid rgba(232,228,220,0.1); }
 h1 { font-size:2rem; font-weight:300; line-height:1.25; margin-bottom:1rem; }
-h2 { font-size:1.05rem; font-weight:400; color:#d4845a; margin-bottom:1.2rem; letter-spacing:0.04em; }
+h2 { font-size:1.05rem; font-weight:400; color:#ffffff; margin-bottom:1.2rem; letter-spacing:0.04em; }
 h3 { font-size:0.95rem; font-weight:600; margin:1.5rem 0 0.3rem; }
 p { margin-bottom:1rem; color:rgba(232,228,220,0.85); }
 ul { margin:0 0 1rem 1.2rem; }
 li { margin-bottom:0.4rem; color:rgba(232,228,220,0.85); }
 strong { color:#e8e4dc; font-weight:600; }
-em { color:#d4845a; font-style:normal; }
+em { color:#ffffff; font-style:normal; }
 .lead { font-size:1.2rem; font-weight:300; color:#e8e4dc; }
 .facts { font-size:0.8rem; color:rgba(232,228,220,0.45); margin-top:1.2rem; }
 .facts span { display:inline-block; margin-right:1.4rem; }
 .back { font-size:0.7rem; }
-.todo { border:1px dashed rgba(212,132,90,0.55); padding:0.1em 0.5em; font-size:0.85em; color:#d4845a; }
+.todo { border:1px dashed rgba(255,255,255,0.65); padding:0.1em 0.5em; font-size:0.85em; color:#ffffff; }
 footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
-#lang { position:fixed; bottom:1.4rem; left:0; right:0; z-index:10; display:flex; justify-content:center; gap:1.6rem; font-size:0.62rem; letter-spacing:0.09em; text-transform:lowercase; }
-.lbtn { color:rgba(232,228,220,0.32); text-decoration:none; cursor:pointer; transition:color .35s; }
-.lbtn:hover { color:rgba(232,228,220,0.85); }
-.lbtn.active { color:rgba(232,228,220,0.7); }
+.btn-link {
+  display:inline-block; border:1px solid rgba(255,255,255,0.6); color:#ffffff;
+  text-decoration:none; padding:0.6rem 1.2rem; border-radius:2px; font-size:0.88rem;
+  font-weight:600; letter-spacing:0.02em; transition:all .25s;
+}
+.btn-link:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
+.lbtn { color:rgba(232,228,220,0.6); text-decoration:none; cursor:pointer; transition:color .25s; }
+.lbtn:hover { color:#ffffff; }
+.lbtn.active { color:#ffffff; font-weight:700; }
 #cookieBar { display:flex; align-items:center; justify-content:space-between; gap:1rem; background:#141414; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.65rem 6vw; font-size:0.72rem; color:rgba(232,228,220,0.75); }
-#cookieBar a { color:#d4845a; text-decoration:none; border-bottom:1px solid rgba(212,132,90,0.4); }
-#cookieBar button { background:none; border:1px solid rgba(232,228,220,0.25); color:rgba(232,228,220,0.6); border-radius:2px; font-size:0.68rem; padding:0.3rem 0.7rem; cursor:pointer; flex-shrink:0; }
-#cookieBar button:hover { color:#e8e4dc; border-color:rgba(232,228,220,0.6); }
+#cookieBar a { color:#ffffff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.55); }
+#cookieBar button { background:none; border:1px solid rgba(255,255,255,0.55); color:#ffffff; font-weight:600; border-radius:2px; font-size:0.72rem; padding:0.4rem 0.9rem; cursor:pointer; flex-shrink:0; transition:all .25s; }
+#cookieBar button:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
 </style>
 </head>
 <body>
@@ -53,21 +60,22 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
 })();
 </script>
 
-<div id="lang">
-  <a class="lbtn" href="summer-school.html">italiano</a>
-  <a class="lbtn active" href="summer-school-en.html">english</a>
-</div>
-
 <nav>
-  <a href="landing-en.html" class="back">← intro</a>
-  <a href="#cose">what it is</a>
-  <a href="#a2026">2026 · sound</a>
-  <a href="#porti">what you take home</a>
-  <a href="#chi">who it's for</a>
-  <a href="#moduli">modules</a>
-  <a href="#faculty">faculty</a>
-  <a href="#iscriversi">pre-apply</a>
-  <a href="where-we-are.html">location</a>
+  <div class="nav-links">
+    <a href="landing-en.html" class="back">← intro</a>
+    <a href="#cose">what it is</a>
+    <a href="#a2026">2026 · sound</a>
+    <a href="#porti">what you take home</a>
+    <a href="#chi">who it's for</a>
+    <a href="#moduli">modules</a>
+    <a href="#faculty">faculty</a>
+    <a href="#iscriversi">pre-apply</a>
+    <a href="where-we-are.html">location</a>
+  </div>
+  <div class="nav-lang">
+    <a class="lbtn" href="summer-school.html">italiano</a>
+    <a class="lbtn active" href="summer-school-en.html">english</a>
+  </div>
 </nav>
 
 <main>
@@ -82,7 +90,7 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
     <p>Adolfo Pini was a scientist who had chosen to live surrounded by art. When he died, he left his house not to an heir, but to an idea: that beauty held in trust should return to those who come after. The building at Corso Garibaldi 2 holds the most important body of work by painter Renzo Bongiovanni Radice, alongside an archive of documents, sketches, and letters. The upper floors were built as an artist's studio. Painting, science, and literature once shared the same rooms, without anyone feeling the need to keep the disciplines separate.</p>
     <p>The question at the heart of the Summer School is a single one: what happens if this place — with its memory, its bourgeois architecture pervaded by art, its foundational vocation toward future generations — becomes the laboratory in which students invent the museum that does not yet exist?</p>
     <p>Before any workshop, participants study Fondazione Pini: they walk it, measure it, question it. They read the letters in the archive. They stand in front of the paintings long enough to understand how they handle space, light, the silence around things. The Foundation's identity serves as brief, as material, as the generative constraint from which all the work descends. You design for a real problem, in a real space, with a real client.</p>
-    <p><a href="where-we-are.html" style="color:#d4845a;text-decoration:none;border-bottom:1px solid rgba(212,132,90,0.4);padding-bottom:2px;">→ see the spaces of Fondazione Pini</a></p>
+    <p><a href="where-we-are.html" class="btn-link">→ see the spaces of Fondazione Pini</a></p>
   </section>
 
   <section id="a2026">
@@ -145,7 +153,7 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
     </ul>
     <p>Pre-enrolment deadline: <strong>15 August 2026</strong><br>Tuition fee: <strong>€500</strong></p>
     <p style="font-size:0.85rem; color:rgba(232,228,220,0.55);">This is a pre-enrolment: the enrolment will be finalised on site, once pre-enrolments have closed. The organisers reserve the right to postpone the Summer School to a date to be defined, should the minimum number of enrolments needed to run the programme not be reached. The new date will be communicated, once rescheduled, to all enrolled participants via the email address provided. Pre-enrolment involves no payment and is not binding until the course is confirmed to proceed.</p>
-    <p><a href="application.html" style="color:#d4845a;text-decoration:none;border-bottom:1px solid rgba(212,132,90,0.4);padding-bottom:2px;">→ Go to the pre-enrolment form</a></p>
+    <p><a href="application.html" class="btn-link">→ Go to the pre-enrolment form</a></p>
   </section>
 
   <footer><a href="https://acmemilano.it" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ACME Academy of Fine Arts and Media</a> · <a href="https://fondazionepini.it" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Fondazione Pini</a> — Milan, 7–12 September 2026</footer>

@@ -7,21 +7,23 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
-nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.9rem 0; display:flex; flex-wrap:wrap; gap:1.3rem; font-size:0.7rem; letter-spacing:0.05em; }
-nav a { color:rgba(232,228,220,0.4); text-decoration:none; }
-nav a:hover { color:#d4845a; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.88rem; letter-spacing:0.03em; }
+.nav-links { display:flex; flex-wrap:wrap; gap:1.5rem; }
+.nav-lang { display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:500; }
+nav a { color:rgba(232,228,220,0.7); text-decoration:none; font-weight:500; }
+nav a:hover { color:#ffffff; text-decoration:underline; }
 main { max-width:64ch; margin:0 auto; }
 section { padding:2.4rem 0; border-bottom:1px solid rgba(232,228,220,0.1); }
 h1 { font-size:2rem; font-weight:300; line-height:1.25; margin-bottom:1rem; }
-h2 { font-size:1.05rem; font-weight:400; color:#d4845a; margin-bottom:1.2rem; letter-spacing:0.04em; }
+h2 { font-size:1.05rem; font-weight:400; color:#ffffff; margin-bottom:1.2rem; letter-spacing:0.04em; }
 p { margin-bottom:1rem; color:rgba(232,228,220,0.85); }
 .lead { font-size:1.15rem; font-weight:300; color:#e8e4dc; }
 .facts { font-size:0.8rem; color:rgba(232,228,220,0.45); margin-top:1.2rem; }
 .facts span { display:inline-block; margin-right:1.4rem; }
 .back { font-size:0.7rem; }
-.todo { border:1px dashed rgba(212,132,90,0.55); padding:0.1em 0.5em; font-size:0.85em; color:#d4845a; }
+.todo { border:1px dashed rgba(255,255,255,0.65); padding:0.1em 0.5em; font-size:0.85em; color:#ffffff; }
 strong { color:#e8e4dc; font-weight:600; }
-em { color:#d4845a; font-style:normal; }
+em { color:#ffffff; font-style:normal; }
 footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
 
 /* form */
@@ -31,12 +33,12 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
 #dati .field { grid-column:1 / -1; }
 #dati .field.half { grid-column:auto; }
 label { display:block; font-size:0.78rem; letter-spacing:0.03em; color:rgba(232,228,220,0.6); margin-bottom:0.35rem; }
-label .req { color:#d4845a; }
+label .req { color:#ffffff; }
 input, select, textarea {
   width:100%; background:transparent; color:#e8e4dc; font-family:inherit; font-size:0.92rem;
   border:1px solid rgba(232,228,220,0.22); border-radius:2px; padding:0.6rem 0.7rem; transition:border-color .25s;
 }
-input:focus, select:focus, textarea:focus { outline:none; border-color:#d4845a; }
+input:focus, select:focus, textarea:focus { outline:none; border-color:#ffffff; }
 input::placeholder, textarea::placeholder { color:rgba(232,228,220,0.28); }
 select option { background:#080808; }
 textarea { resize:vertical; min-height:130px; }
@@ -45,29 +47,28 @@ textarea { resize:vertical; min-height:130px; }
 .consent { display:flex; gap:0.7rem; align-items:flex-start; margin-bottom:0.9rem; }
 .consent input { width:auto; margin-top:0.25rem; flex:0 0 auto; }
 .consent label { margin:0; font-size:0.82rem; color:rgba(232,228,220,0.78); }
-.consent a { color:#d4845a; }
+.consent a { color:#ffffff; }
 
 details { border:1px solid rgba(232,228,220,0.15); border-radius:2px; padding:0.7rem 0.9rem; margin-bottom:1.2rem; }
-details summary { cursor:pointer; font-size:0.82rem; color:#d4845a; }
+details summary { cursor:pointer; font-size:0.82rem; color:#ffffff; }
 details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 
-.note { font-size:0.78rem; color:rgba(232,228,220,0.5); border-left:2px solid rgba(212,132,90,0.5); padding-left:0.9rem; margin-bottom:1.5rem; }
+.note { font-size:0.78rem; color:rgba(232,228,220,0.5); border-left:2px solid rgba(255,255,255,0.65); padding-left:0.9rem; margin-bottom:1.5rem; }
 
-.submit { background:#e8e4dc; color:#080808; border:none; border-radius:2px; font-size:0.85rem; letter-spacing:0.04em; padding:0.8rem 1.6rem; cursor:pointer; font-family:inherit; transition:opacity .25s; }
+.submit { background:#ffffff; color:#080808; border:none; border-radius:2px; font-size:0.92rem; font-weight:700; letter-spacing:0.04em; padding:0.85rem 1.8rem; cursor:pointer; font-family:inherit; transition:opacity .25s; }
 .submit:hover { opacity:0.85; }
-.err { color:#ff6a5a; font-size:0.78rem; margin-top:0.3rem; display:none; }
-.field.invalid input, .field.invalid select, .field.invalid textarea { border-color:#ff6a5a; }
+.err { color:#ff0000; font-size:0.78rem; margin-top:0.3rem; display:none; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color:#ff0000; }
 .field.invalid .err { display:block; }
-#feedback { font-size:0.85rem; color:#d4845a; margin-top:1rem; min-height:1.2em; }
+#feedback { font-size:0.85rem; color:#ffffff; margin-top:1rem; min-height:1.2em; }
 
-#lang { position:fixed; bottom:1.4rem; left:0; right:0; z-index:10; display:flex; justify-content:center; gap:1.6rem; font-size:0.62rem; letter-spacing:0.09em; text-transform:lowercase; }
-.lbtn { color:rgba(232,228,220,0.32); text-decoration:none; cursor:pointer; transition:color .35s; }
-.lbtn:hover { color:rgba(232,228,220,0.85); }
-.lbtn.active { color:rgba(232,228,220,0.7); }
+.lbtn { color:rgba(232,228,220,0.6); text-decoration:none; cursor:pointer; transition:color .25s; }
+.lbtn:hover { color:#ffffff; }
+.lbtn.active { color:#ffffff; font-weight:700; }
 #cookieBar { display:flex; align-items:center; justify-content:space-between; gap:1rem; background:#141414; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.65rem 6vw; font-size:0.72rem; color:rgba(232,228,220,0.75); }
-#cookieBar a { color:#d4845a; text-decoration:none; border-bottom:1px solid rgba(212,132,90,0.4); }
-#cookieBar button { background:none; border:1px solid rgba(232,228,220,0.25); color:rgba(232,228,220,0.6); border-radius:2px; font-size:0.68rem; padding:0.3rem 0.7rem; cursor:pointer; flex-shrink:0; }
-#cookieBar button:hover { color:#e8e4dc; border-color:rgba(232,228,220,0.6); }
+#cookieBar a { color:#ffffff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.55); }
+#cookieBar button { background:none; border:1px solid rgba(255,255,255,0.55); color:#ffffff; font-weight:600; border-radius:2px; font-size:0.72rem; padding:0.4rem 0.9rem; cursor:pointer; flex-shrink:0; transition:all .25s; }
+#cookieBar button:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
 </style>
 </head>
 <body>
@@ -87,15 +88,16 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 })();
 </script>
 
-<div id="lang">
-  <a class="lbtn" href="iscrizione.html">italiano</a>
-  <a class="lbtn active" href="application.html">english</a>
-</div>
-
 <nav>
-  <a href="summer-school-en.html" class="back">← the programme</a>
-  <a href="#dati">your details</a>
-  <a href="#consensi">consents</a>
+  <div class="nav-links">
+    <a href="summer-school-en.html" class="back">← the programme</a>
+    <a href="#dati">your details</a>
+    <a href="#consensi">consents</a>
+  </div>
+  <div class="nav-lang">
+    <a class="lbtn" href="iscrizione.html">italiano</a>
+    <a class="lbtn active" href="application.html">english</a>
+  </div>
 </nav>
 
 <main>
@@ -178,7 +180,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
         <p>Purpose: pre-enrolment management and, if admitted, contractual and invoicing obligations. Legal basis: consent and pre-contractual measures.</p>
         <p>Your data is collected only at the point of pre-enrolment, through this form: no access logs, browsing data, or other data about your use of the site are recorded.</p>
         <p>Cookies: this site does not use tracking or profiling cookies. No third-party cookies or traffic-analysis tools are set.</p>
-        <p>Data retention: for as long as needed to process the pre-enrolment and, if admitted, for the administrative and tax obligations required by law. You have the right to access, rectify and erase your data, and to object to processing by writing to <a href="mailto:comunicazione@acmemilano.it" style="color:#d4845a;">comunicazione@acmemilano.it</a>.</p>
+        <p>Data retention: for as long as needed to process the pre-enrolment and, if admitted, for the administrative and tax obligations required by law. You have the right to access, rectify and erase your data, and to object to processing by writing to <a href="mailto:comunicazione@acmemilano.it" style="color:#ffffff;">comunicazione@acmemilano.it</a>.</p>
       </details>
 
       <div class="consent" id="c-privacy">
@@ -226,7 +228,7 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    feedback.style.color = "#d4845a";
+    feedback.style.color = "#ffffff";
     feedback.textContent = "";
     let ok = true;
 
@@ -286,15 +288,15 @@ details p { font-size:0.82rem; color:rgba(232,228,220,0.7); margin-top:0.8rem; }
       });
       const out = await r.json();
       if(out.success){
-        feedback.style.color = "#86d39a";
+        feedback.style.color = "#4265e4";
         feedback.textContent = "✓ Pre-enrolment sent. You'll receive a confirmation by email.";
         form.reset();
       } else {
-        feedback.style.color = "#ff6a5a";
+        feedback.style.color = "#ff0000";
         feedback.textContent = "✗ Sending failed: " + (out.message || "please try again later.");
       }
     } catch(err) {
-      feedback.style.color = "#ff6a5a";
+      feedback.style.color = "#ff0000";
       feedback.textContent = "✗ Network error: " + err.message;
     } finally {
       btn.disabled = false;

@@ -7,31 +7,33 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
-nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.12); padding:0.9rem 0; display:flex; flex-wrap:wrap; gap:1.3rem; font-size:0.7rem; letter-spacing:0.05em; }
-nav a { color:rgba(232,228,220,0.4); text-decoration:none; }
-nav a:hover { color:#d4845a; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.88rem; letter-spacing:0.03em; }
+.nav-links { display:flex; flex-wrap:wrap; gap:1.5rem; }
+.nav-lang { display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:500; }
+nav a { color:rgba(232,228,220,0.7); text-decoration:none; font-weight:500; }
+nav a:hover { color:#ffffff; text-decoration:underline; }
 main { max-width:64ch; margin:0 auto; }
 h1 { font-size:1.8rem; font-weight:300; line-height:1.25; margin:3rem 0 1.5rem; }
-h2 { font-size:1rem; font-weight:600; color:#d4845a; margin:2rem 0 0.8rem; letter-spacing:0.02em; }
+h2 { font-size:1rem; font-weight:600; color:#ffffff; margin:2rem 0 0.8rem; letter-spacing:0.02em; }
 p { margin-bottom:1rem; color:rgba(232,228,220,0.85); }
 strong { color:#e8e4dc; font-weight:600; }
-a.inline { color:#d4845a; text-decoration:none; border-bottom:1px solid rgba(212,132,90,0.4); padding-bottom:1px; }
+a.inline { color:#ffffff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.55); padding-bottom:1px; }
 footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-align:center; }
-#lang { position:fixed; bottom:1.4rem; left:0; right:0; z-index:10; display:flex; justify-content:center; gap:1.6rem; font-size:0.62rem; letter-spacing:0.09em; text-transform:lowercase; }
-.lbtn { color:rgba(232,228,220,0.32); text-decoration:none; cursor:pointer; transition:color .35s; }
-.lbtn:hover { color:rgba(232,228,220,0.85); }
-.lbtn.active { color:rgba(232,228,220,0.7); }
+.lbtn { color:rgba(232,228,220,0.6); text-decoration:none; cursor:pointer; transition:color .25s; }
+.lbtn:hover { color:#ffffff; }
+.lbtn.active { color:#ffffff; font-weight:700; }
 </style>
 </head>
 <body>
 
-<div id="lang">
-  <a class="lbtn" href="privacy-cookie.html">italiano</a>
-  <a class="lbtn active" href="privacy-cookie-en.html">english</a>
-</div>
-
 <nav>
-  <a href="summer-school-en.html" class="back">← the programme</a>
+  <div class="nav-links">
+    <a href="summer-school-en.html" class="back">← the programme</a>
+  </div>
+  <div class="nav-lang">
+    <a class="lbtn" href="privacy-cookie.html">italiano</a>
+    <a class="lbtn active" href="privacy-cookie-en.html">english</a>
+  </div>
 </nav>
 
 <main>
