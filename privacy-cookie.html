@@ -7,9 +7,20 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#080808; color:#e8e4dc; font-family:system-ui,-apple-system,sans-serif; font-weight:400; line-height:1.65; padding:0 6vw 8rem; }
-nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.88rem; letter-spacing:0.03em; }
-.nav-links { display:flex; flex-wrap:wrap; gap:1.5rem; }
-.nav-lang { display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:700; }
+nav { position:sticky; top:0; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 0; display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.5rem; font-size:0.88rem; letter-spacing:0.03em; }
+nav a.back { order:1; }
+.nav-links { order:2; display:flex; flex-wrap:wrap; gap:1.5rem; flex:1 1 auto; }
+.nav-lang { order:3; margin-left:auto; display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:700; }
+#navToggle {
+  order:4; display:none; background:none; border:1px solid rgba(255,255,255,0.5); color:#ffffff;
+  font-size:1rem; line-height:1; padding:0.4rem 0.65rem; border-radius:2px; cursor:pointer; font-family:inherit;
+}
+#navToggle:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
+@media (max-width:640px) {
+  .nav-links { order:5; flex-basis:100%; display:none; flex-direction:column; gap:0.9rem; }
+  nav.open .nav-links { display:flex; }
+  #navToggle { display:inline-block; }
+}
 nav a { color:rgba(232,228,220,0.7); text-decoration:none; font-weight:700; }
 nav a:hover { color:#ffffff; text-decoration:underline; }
 main { max-width:64ch; margin:0 auto; }
@@ -27,12 +38,14 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
 <body>
 
 <nav>
-  <div class="nav-links">
-    <a href="summer-school.html" class="back">← il programma</a>
-  </div>
+  <a href="summer-school.html" class="back">← il programma</a>
+  <button id="navToggle" aria-label="menu">☰</button>
   <div class="nav-lang">
     <a class="lbtn active" href="privacy-cookie.html">italiano</a>
     <a class="lbtn" href="privacy-cookie-en.html">english</a>
+  </div>
+  <div class="nav-links" id="navLinks">
+
   </div>
 </nav>
 
@@ -59,5 +72,17 @@ footer { padding-top:3rem; font-size:0.75rem; color:rgba(232,228,220,0.4); text-
 
   <footer><a href="https://acmemilano.it" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ACME Academy of Fine Arts and Media</a> · <a href="https://fondazionepini.it" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Fondazione Pini</a> — Milano, 7–12 settembre 2026</footer>
 </main>
+<script>
+(function(){
+  var navToggle = document.getElementById("navToggle");
+  var navEl = document.querySelector("nav");
+  if (navToggle && navEl) {
+    navToggle.addEventListener("click", function(){
+      var open = navEl.classList.toggle("open");
+      navToggle.textContent = open ? "✕" : "☰";
+    });
+  }
+})();
+</script>
 </body>
 </html>
