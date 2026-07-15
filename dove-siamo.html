@@ -6,55 +6,84 @@
 <title>Fondazione Pini</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { background:#f2efe8; height:100%; width:100%; overflow:hidden; }
+  html, body { background:#ffffff; height:100%; width:100%; overflow:hidden; font-family:system-ui,-apple-system,sans-serif; }
 
-  #wrap { position:fixed; inset:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-  #wrap::-webkit-scrollbar { width:0; height:0; }
-
-  .set { display:flex; gap:8px; padding:8px; align-items:flex-start; }
-  .col { display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; }
-
-  .col img {
-    display:block;
-    width:100%;
-    height:auto;
-    cursor:zoom-in;
-    transition:opacity .2s;
-  }
-  .col img:hover { opacity:0.88; }
-
+  #topbar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:1.1rem 6vw; }
   #back {
-    position:fixed; top:1.2rem; left:1.2rem; z-index:6;
     width:36px; height:36px; border-radius:50%;
-    background:rgba(8,8,8,0.55); backdrop-filter:blur(3px);
+    background:rgba(8,8,8,0.85); backdrop-filter:blur(3px);
     display:flex; align-items:center; justify-content:center;
     text-decoration:none; transition:background .3s;
   }
-  #back:hover { background:rgba(8,8,8,0.85); }
+  #back:hover { background:#080808; }
   #back span {
     display:block; width:9px; height:9px;
-    border-left:1.5px solid rgba(232,228,220,0.9);
-    border-bottom:1.5px solid rgba(232,228,220,0.9);
+    border-left:1.5px solid #ffffff; border-bottom:1.5px solid #ffffff;
     transform:rotate(45deg); margin-left:3px;
   }
+  #lang { display:flex; gap:0.9rem; font-size:0.8rem; letter-spacing:0.03em; text-transform:lowercase; font-weight:500; }
+  .lbtn { color:rgba(8,8,8,0.55); text-decoration:none; }
+  .lbtn:hover { color:#080808; }
+  .lbtn.active { color:#080808; font-weight:700; text-decoration:underline; }
+
+  #stage { position:fixed; inset:0; display:flex; align-items:center; }
+  #track {
+    display:flex; align-items:center; gap:24px;
+    overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+    width:100%; height:100%;
+    padding:0 calc(50vw - min(58vw,640px)/2);
+    scrollbar-width:none;
+  }
+  #track::-webkit-scrollbar { display:none; }
+
+  .slide {
+    flex:0 0 auto; scroll-snap-align:center; cursor:pointer;
+    width:min(58vw,640px);
+    opacity:0.32; transform:scale(0.9);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .slide.active { opacity:1; transform:scale(1); }
+  .slide img { width:100%; height:auto; display:block; box-shadow:0 18px 50px rgba(0,0,0,0.12); }
+
+  .navbtn {
+    position:fixed; top:50%; transform:translateY(-50%); z-index:8;
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.9); border:1px solid rgba(8,8,8,0.25);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:all .25s;
+  }
+  .navbtn:hover { background:#080808; border-color:#080808; }
+  .navbtn:hover span { border-color:#ffffff; }
+  .navbtn span { display:block; width:9px; height:9px; border-left:1.5px solid #080808; border-bottom:1.5px solid #080808; transition:border-color .25s; }
+  #prevBtn { left:1.2rem; }
+  #prevBtn span { transform:rotate(45deg); margin-left:3px; }
+  #nextBtn { right:1.2rem; }
+  #nextBtn span { transform:rotate(225deg); margin-right:3px; }
 
   #lightbox {
-    position:fixed; inset:0; z-index:20; background:rgba(20,18,14,0.92);
+    position:fixed; inset:0; z-index:20; background:rgba(0,0,0,0.92);
     display:none; align-items:center; justify-content:center; padding:4vw;
     cursor:zoom-out;
   }
   #lightbox.open { display:flex; }
-  #lightbox img { max-width:92vw; max-height:92vh; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  #lightbox img { max-width:92vw; max-height:92vh; box-shadow:0 20px 60px rgba(0,0,0,0.6); }
 </style>
 </head>
 <body>
 
-<a id="back" href="summer-school.html" aria-label="torna al programma"><span></span></a>
+<div id="topbar">
+  <a id="back" href="summer-school.html" aria-label="torna al programma"><span></span></a>
+  <div id="lang">
+    <a class="lbtn active" href="dove-siamo.html">italiano</a>
+    <a class="lbtn" href="where-we-are.html">english</a>
+  </div>
+</div>
 
-<div id="wrap">
-  <div class="set" id="setA"></div>
-  <div class="set" id="setB"></div>
-  <div class="set" id="setC"></div>
+<div id="stage">
+  <div class="navbtn" id="prevBtn" aria-label="precedente"><span></span></div>
+  <div id="track"></div>
+  <div class="navbtn" id="nextBtn" aria-label="successiva"><span></span></div>
 </div>
 
 <div id="lightbox">
@@ -67,99 +96,96 @@
     "pini-07.jpg","pini-08.jpg","pini-09.jpg","pini-10.jpg","pini-11.jpg","pini-12.jpg",
     "pini-13.jpg","pini-14.jpg","pini-15.jpg","pini-16.jpg","pini-17.jpg","pini-18.jpg"
   ];
-  const GAP = 8;
+  const N = FILES.length;
+  const SETS = 3;
 
-  const wrap = document.getElementById("wrap");
-  const sets = [document.getElementById("setA"), document.getElementById("setB"), document.getElementById("setC")];
+  const track = document.getElementById("track");
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
-  function colCount() {
-    const w = window.innerWidth;
-    if (w < 640) return 2;
-    if (w < 1000) return 3;
-    return 4;
+  let slides = [];
+
+  function buildTrack() {
+    track.innerHTML = "";
+    slides = [];
+    for (let s = 0; s < SETS; s++) {
+      FILES.forEach((f) => {
+        const div = document.createElement("div");
+        div.className = "slide";
+        const img = document.createElement("img");
+        img.src = "img/" + f;
+        img.alt = "";
+        div.appendChild(img);
+        div.addEventListener("click", () => onSlideClick(div));
+        track.appendChild(div);
+        slides.push(div);
+      });
+    }
+  }
+  buildTrack();
+
+  function activeIndex() {
+    const cRect = track.getBoundingClientRect();
+    const cCenter = cRect.left + cRect.width / 2;
+    let best = 0, bestDist = Infinity;
+    slides.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs((r.left + r.width / 2) - cCenter);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    return best;
   }
 
-  function openLightbox(src) {
-    lightboxImg.src = src;
-    lightbox.classList.add("open");
+  function setActive(i) {
+    slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
   }
-  function closeLightbox() {
+
+  function goTo(i, smooth) {
+    slides[i].scrollIntoView({ inline: "center", block: "nearest", behavior: smooth ? "smooth" : "auto" });
+    setActive(i);
+  }
+
+  function onSlideClick(el) {
+    const i = slides.indexOf(el);
+    if (el.classList.contains("active")) {
+      lightboxImg.src = el.querySelector("img").src;
+      lightbox.classList.add("open");
+    } else {
+      goTo(i, true);
+    }
+  }
+  lightbox.addEventListener("click", () => {
     lightbox.classList.remove("open");
     lightboxImg.src = "";
-  }
-  lightbox.addEventListener("click", closeLightbox);
+  });
 
-  let ratios = null; // aspect ratio (w/h) per file, filled once images are measured
-
-  function measureRatios() {
-    return Promise.all(FILES.map(f => new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => resolve(img.naturalWidth / img.naturalHeight);
-      img.onerror = () => resolve(1);
-      img.src = "img/" + f;
-    })));
-  }
-
-  function buildSet(container, n) {
-    container.innerHTML = "";
-    const colWidth = (container.clientWidth - GAP * (n - 1)) / n;
-    const cols = [];
-    const colHeights = new Array(n).fill(0);
-    for (let i = 0; i < n; i++) {
-      const col = document.createElement("div");
-      col.className = "col";
-      container.appendChild(col);
-      cols.push(col);
-    }
-    FILES.forEach((f, i) => {
-      let shortest = 0;
-      for (let c = 1; c < n; c++) if (colHeights[c] < colHeights[shortest]) shortest = c;
-      const img = document.createElement("img");
-      img.src = "img/" + f;
-      img.alt = "";
-      img.loading = "lazy";
-      img.addEventListener("click", () => openLightbox("img/" + f));
-      cols[shortest].appendChild(img);
-      const h = colWidth / (ratios ? ratios[i] : 1.3);
-      colHeights[shortest] += h + GAP;
-    });
-  }
-
-  function rebuildAll() {
-    const n = colCount();
-    sets.forEach(s => buildSet(s, n));
-    measure();
-  }
-
-  let H = 0;
-  function measure() {
-    H = sets[0].getBoundingClientRect().height;
-    if (H > 0) wrap.scrollTop = H;
-  }
-
+  let scrollTimer = null;
   function onScroll() {
-    if (H <= 0) return;
-    if (wrap.scrollTop >= 2 * H) {
-      wrap.scrollTop -= H;
-    } else if (wrap.scrollTop <= 0) {
-      wrap.scrollTop += H;
-    }
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const i = activeIndex();
+      setActive(i);
+      // se siamo usciti dal set centrale, saltiamo silenziosamente allo stesso
+      // punto nel set centrale, così lo scroll sembra non finire mai
+      if (i < N) {
+        goTo(i + N, false);
+      } else if (i >= 2 * N) {
+        goTo(i - N, false);
+      }
+    }, 90);
   }
+  track.addEventListener("scroll", onScroll, { passive: true });
 
-  let resizeTimer = null;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(rebuildAll, 200);
-  });
-  wrap.addEventListener("scroll", onScroll, { passive:true });
+  prevBtn.addEventListener("click", () => goTo(activeIndex() - 1, true));
+  nextBtn.addEventListener("click", () => goTo(activeIndex() + 1, true));
 
-  measureRatios().then(r => {
-    ratios = r;
-    rebuildAll();
-    setTimeout(measure, 150);
-  });
+  window.addEventListener("resize", () => goTo(activeIndex(), false));
+
+  // posizione iniziale: primo elemento del set centrale, al centro
+  window.addEventListener("load", () => goTo(N, false));
+  setTimeout(() => goTo(N, false), 60);
 </script>
 </body>
 </html>
