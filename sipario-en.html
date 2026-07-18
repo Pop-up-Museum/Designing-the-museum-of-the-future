@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer School — ACME × Fondazione Pini</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:100%; min-height:100%; background:#080808; font-family:system-ui,-apple-system,sans-serif; font-weight:300; text-transform:lowercase; }
+
+  nav { position:sticky; top:0; z-index:10; background:#080808; border-bottom:1px solid rgba(232,228,220,0.18); padding:1.1rem 6vw; display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.5rem; font-size:0.88rem; letter-spacing:0.03em; }
+  nav a.back { order:1; color:rgba(232,228,220,0.7); text-decoration:none; font-weight:700; }
+  nav a.back:hover { color:#ffffff; text-decoration:underline; }
+  .nav-links { order:2; display:flex; flex-wrap:wrap; gap:1.5rem; flex:1 1 auto; }
+  .nav-links a { color:rgba(232,228,220,0.7); text-decoration:none; font-weight:700; }
+  .nav-links a:hover { color:#ffffff; text-decoration:underline; }
+  .nav-lang { order:3; margin-left:auto; display:flex; gap:0.9rem; flex-shrink:0; text-transform:lowercase; font-weight:700; }
+  #navToggle {
+    order:4; display:none; background:none; border:1px solid rgba(255,255,255,0.5); color:#ffffff;
+    font-size:1rem; line-height:1; padding:0.4rem 0.65rem; border-radius:2px; cursor:pointer; font-family:inherit;
+  }
+  #navToggle:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
+  @media (max-width:640px) {
+    .nav-links { order:5; flex-basis:100%; display:none; flex-direction:column; gap:0.9rem; }
+    nav.open .nav-links { display:flex; }
+    #navToggle { display:inline-block; }
+  }
+  .lbtn { color:rgba(232,228,220,0.6); text-decoration:none; cursor:pointer; transition:color .25s; }
+  .lbtn:hover { color:#ffffff; }
+  .lbtn.active { color:#ffffff; text-decoration:underline; }
+
+  #ripples { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .ripple {
+    position:fixed; border-radius:50%; pointer-events:none;
+    border-style:solid; border-width:1.5px;
+    width:16px; height:16px; opacity:0.5;
+    transition:width 3.4s ease-out, height 3.4s ease-out, opacity 3.4s ease-out;
+    transform:translate(-50%,-50%);
+  }
+
+  #stage { min-height:calc(100vh - 78px); display:flex; align-items:center; justify-content:center; padding:6vw; position:relative; z-index:1; }
+  #text { font-size:clamp(0.95rem,2.4vw,1.6rem); line-height:1.9; color:#e8e4dc; text-align:center; max-width:46ch; }
+  .line { display:block; opacity:0; transform:translateY(8px); transition:opacity .5s ease, transform .5s ease; }
+  .line.show { opacity:1; transform:translateY(0); }
+  .echo { position:fixed; color:#e8e4dc; pointer-events:none; text-align:center; font-weight:300; font-size:clamp(0.95rem,2.4vw,1.6rem); line-height:1.9; }
+
+  .cta { display:block; margin:1.1rem auto 0; opacity:0; transform:translateY(6px); transition:opacity .6s ease, transform .6s ease; }
+  .cta.show { opacity:1; transform:translateY(0); }
+  .btn-link {
+    display:inline-block; border:1px solid rgba(255,255,255,0.6); color:#ffffff;
+    text-decoration:none; padding:0.55rem 1.15rem; border-radius:2px; font-size:0.82rem;
+    font-weight:700; letter-spacing:0.02em; transition:all .25s; text-transform:lowercase;
+  }
+  .btn-link:hover { background:#ffffff; color:#080808; border-color:#ffffff; }
+
+  #soundbar { position:fixed; bottom:1.4rem; left:0; right:0; z-index:6; display:flex; justify-content:center; }
+  #onoff {
+    color:#ffffff; font-weight:700; border:1px solid rgba(255,255,255,0.5);
+    padding:0.4rem 0.9rem; border-radius:2px; font-size:0.78rem; letter-spacing:0.03em;
+    cursor:pointer; background:none; transition:all .25s; text-transform:lowercase;
+  }
+  #onoff:hover, #onoff.active { background:#ffffff; color:#080808; border-color:#ffffff; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="back" href="landing-en.html">← intro</a>
+  <button id="navToggle" aria-label="menu">☰</button>
+  <div class="nav-lang">
+    <a class="lbtn" href="sipario.html">italiano</a>
+    <a class="lbtn active" href="sipario-en.html">english</a>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="summer-school-en.html#cose">what it is</a>
+    <a href="summer-school-en.html#a2026">2026 · sound</a>
+    <a href="summer-school-en.html#porti">what you take home</a>
+    <a href="summer-school-en.html#chi">who it's for</a>
+    <a href="summer-school-en.html#moduli">modules</a>
+    <a href="summer-school-en.html#faculty">faculty</a>
+    <a href="summer-school-en.html#iscriversi">pre-apply</a>
+    <a href="where-we-are.html">location</a>
+  </div>
+</nav>
+
+<div id="ripples"></div>
+
+<div id="stage"><div id="text"></div></div>
+
+<div id="soundbar"><button id="onoff">♪ on</button></div>
+
+<script>
+  const textEl = document.getElementById("text");
+  const ripplesEl = document.getElementById("ripples");
+  const onoffBtn = document.getElementById("onoff");
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ==================================================================
+     SUONO — un tono monotono con leggero riverbero, sincronizzato a
+     ogni cerchio concentrico. Parte da solo al caricamento; se il
+     browser lo blocca, scatta al primo gesto (click/scroll/tasto).
+     ================================================================== */
+  let ctx = null, master = null, reverb = null, avviato = false, acceso = true;
+
+  function costruisciStanza() {
+    const sr = ctx.sampleRate, len = sr * 1.6, buf = ctx.createBuffer(2, len, sr);
+    for (let c = 0; c < 2; c++) {
+      const d = buf.getChannelData(c);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.0);
+    }
+    const cv = ctx.createConvolver(); cv.buffer = buf; return cv;
+  }
+  function initAudio() {
+    if (avviato) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0.8; master.connect(ctx.destination);
+    reverb = costruisciStanza();
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1500;
+    reverb.connect(lp); lp.connect(master);
+    avviato = true;
+  }
+  function suonaGoccia() {
+    if (!acceso || !avviato) return;
+    const freq = 174.61; // monotono: un solo tono, fisso
+    const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq;
+    const g = ctx.createGain();
+    const t = ctx.currentTime;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.22, t + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+    o.connect(g); g.connect(master);
+    const send = ctx.createGain(); send.gain.value = 0.4;
+    g.connect(send); send.connect(reverb);
+    o.start(t); o.stop(t + 2.0);
+  }
+  function applicaStato() {
+    onoffBtn.textContent = acceso ? "♪ on" : "♪ off";
+    onoffBtn.classList.toggle("active", acceso);
+    if (avviato) {
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setTargetAtTime(acceso ? 0.8 : 0, t, 0.8);
+    }
+  }
+  function attiva() {
+    if (avviato && ctx.state === "running") return;
+    initAudio(); ctx.resume().then(applicaStato); applicaStato();
+  }
+  window.addEventListener("load", attiva);
+  ["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev =>
+    window.addEventListener(ev, attiva, { passive: true }));
+  onoffBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    acceso = !acceso;
+    if (!avviato) initAudio();
+    if (ctx) ctx.resume();
+    applicaStato();
+  });
+
+  /* ==================================================================
+     RIPPLE — cerchi concentrici rosso/blu, tipo goccia sull'acqua,
+     a intervalli casuali. Ogni cerchio fa suonare anche la goccia sonora.
+     ================================================================== */
+  function creaRipple() {
+    const el = document.createElement("div");
+    el.className = "ripple";
+    const x = 10 + Math.random() * 80;
+    const y = 10 + Math.random() * 80;
+    const colore = Math.random() < 0.5 ? "#ff0000" : "#4265e4";
+    el.style.left = x + "vw";
+    el.style.top = y + "vh";
+    el.style.borderColor = colore;
+    ripplesEl.appendChild(el);
+    suonaGoccia();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.width = "640px";
+        el.style.height = "640px";
+        el.style.opacity = "0";
+      });
+    });
+    setTimeout(() => el.remove(), 3600);
+  }
+  function programmaRipple() {
+    creaRipple();
+    const prossimo = 2600 + Math.random() * 3400;
+    setTimeout(programmaRipple, prossimo);
+  }
+  setTimeout(programmaRipple, 1200);
+
+  /* ==================================================================
+     TESTO — appare velocemente con dissolvenza, poi vibra con un eco
+     visivo (come la propagazione di un'onda), niente battitura.
+     ================================================================== */
+  function riverbero(lineEl) {
+    const r = lineEl.getBoundingClientRect();
+    for (let i = 1; i <= 3; i++) {
+      const g = lineEl.cloneNode(true); g.className = "echo";
+      g.style.left = r.left + "px"; g.style.top = r.top + "px"; g.style.width = r.width + "px";
+      g.style.opacity = (0.4 / i).toFixed(2);
+      const dur = 1000 + i * 600;
+      g.style.transition = "transform " + dur + "ms ease-out, opacity " + dur + "ms ease-out";
+      document.body.appendChild(g);
+      requestAnimationFrame(() => { g.style.transform = "translateX(" + (i * 16) + "px)"; g.style.opacity = "0"; });
+      setTimeout(() => g.remove(), dur + 200);
+    }
+  }
+  function mostraLinea(id, testo) {
+    const el = document.createElement("span");
+    el.className = "line"; el.id = id; el.textContent = testo;
+    textEl.appendChild(el);
+    requestAnimationFrame(() => el.classList.add("show"));
+    let fatto = false;
+    el.addEventListener("transitionend", function onEnd(e) {
+      if (e.propertyName !== "opacity" || fatto) return;
+      fatto = true;
+      el.removeEventListener("transitionend", onEnd);
+      riverbero(el);
+    });
+    setTimeout(() => { if (!fatto) { fatto = true; riverbero(el); } }, 1000);
+  }
+  function aCapo() { textEl.appendChild(document.createElement("br")); }
+  function mostraBottone(id, html) {
+    const el = document.createElement("span");
+    el.className = "cta"; el.id = id; el.innerHTML = html;
+    textEl.appendChild(el);
+    requestAnimationFrame(() => el.classList.add("show"));
+  }
+
+  const LINE1 = "Designing the Museum of the Future is a summer school born from the collaboration between ACME and Fondazione Pini, dedicated this year to sound design and spatial audio.";
+  const LINE2 = "a week inside Fondazione Pini, a historic building in the heart of Milan.";
+  const LINE3 = "limited places, starting 7 september.";
+  const CTA1 = '<a class="btn-link" href="summer-school-en.html">→ discover the full programme</a>';
+  const CTA2 = '<a class="btn-link" href="where-we-are.html">→ see the spaces of Fondazione Pini</a>';
+  const CTA3 = '<a class="btn-link" href="application.html">→ pre-register now</a>';
+
+  async function run() {
+    await sleep(500);
+    mostraLinea("l1", LINE1);
+    mostraBottone("c1", CTA1);
+    aCapo(); aCapo();
+
+    mostraLinea("l2", LINE2);
+    mostraBottone("c2", CTA2);
+    aCapo(); aCapo();
+
+    mostraLinea("l3", LINE3);
+    mostraBottone("c3", CTA3);
+  }
+
+  run();
+</script>
+<script>
+(function(){
+  var navToggle = document.getElementById("navToggle");
+  var navEl = document.querySelector("nav");
+  if (navToggle && navEl) {
+    navToggle.addEventListener("click", function(){
+      var open = navEl.classList.toggle("open");
+      navToggle.textContent = open ? "✕" : "☰";
+    });
+  }
+})();
+</script>
+</body>
+</html>
