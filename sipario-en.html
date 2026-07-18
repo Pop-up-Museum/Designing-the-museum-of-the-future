@@ -210,14 +210,24 @@
     el.className = "line"; el.id = id; el.textContent = testo;
     textEl.appendChild(el);
     requestAnimationFrame(() => el.classList.add("show"));
+
     let fatto = false;
-    el.addEventListener("transitionend", function onEnd(e) {
-      if (e.propertyName !== "opacity" || fatto) return;
+    function spara() {
+      if (fatto) return;
       fatto = true;
-      el.removeEventListener("transitionend", onEnd);
       riverbero(el);
-    });
-    setTimeout(() => { if (!fatto) { fatto = true; riverbero(el); } }, 1000);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { spara(); obs.disconnect(); }
+        });
+      }, { threshold: 0.35 });
+      obs.observe(el);
+    } else {
+      setTimeout(spara, 900);
+    }
   }
   function aCapo() { textEl.appendChild(document.createElement("br")); }
   function mostraBottone(id, html) {

@@ -210,16 +210,29 @@
     el.className = "line"; el.id = id; el.textContent = testo;
     textEl.appendChild(el);
     requestAnimationFrame(() => el.classList.add("show"));
+
     let fatto = false;
-    el.addEventListener("transitionend", function onEnd(e) {
-      if (e.propertyName !== "opacity" || fatto) return;
+    function spara() {
+      if (fatto) return;
       fatto = true;
-      el.removeEventListener("transitionend", onEnd);
       riverbero(el);
-    });
-    // rete di sicurezza: se per qualche motivo transitionend non scattasse
-    // (tab in background, ecc.), l'eco parte comunque dopo un secondo.
-    setTimeout(() => { if (!fatto) { fatto = true; riverbero(el); } }, 1000);
+    }
+
+    // l'eco parte quando la frase entra davvero nella visuale (anche se è
+    // più in basso della pagina e ci si arriva solo scorrendo), non a un
+    // tempo fisso dal caricamento — altrimenti su frasi "sotto la piega"
+    // l'effetto potrebbe già essere finito prima che si scorra fin lì.
+    if ("IntersectionObserver" in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { spara(); obs.disconnect(); }
+        });
+      }, { threshold: 0.35 });
+      obs.observe(el);
+    } else {
+      // rete di sicurezza solo per browser molto vecchi senza IntersectionObserver
+      setTimeout(spara, 900);
+    }
   }
   function aCapo() { textEl.appendChild(document.createElement("br")); }
   function mostraBottone(id, html) {
