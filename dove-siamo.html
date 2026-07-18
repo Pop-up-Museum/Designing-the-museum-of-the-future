@@ -6,25 +6,26 @@
 <title>Fondazione Pini</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { background:#ffffff; height:100%; width:100%; overflow:hidden; font-family:system-ui,-apple-system,sans-serif; }
+  html, body { background:#080808; height:100%; width:100%; overflow:hidden; font-family:system-ui,-apple-system,sans-serif; }
 
   #topbar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between; align-items:center; padding:1.1rem 6vw; }
   #back {
     width:36px; height:36px; border-radius:50%;
-    background:rgba(8,8,8,0.85); backdrop-filter:blur(3px);
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.5);
     display:flex; align-items:center; justify-content:center;
-    text-decoration:none; transition:background .3s;
+    text-decoration:none; transition:all .3s;
   }
-  #back:hover { background:#080808; }
+  #back:hover { background:#ffffff; }
+  #back:hover span { border-color:#080808; }
   #back span {
     display:block; width:9px; height:9px;
     border-left:1.5px solid #ffffff; border-bottom:1.5px solid #ffffff;
-    transform:rotate(45deg); margin-left:3px;
+    transform:rotate(45deg); margin-left:3px; transition:border-color .3s;
   }
   #lang { display:flex; gap:0.9rem; font-size:0.8rem; letter-spacing:0.03em; text-transform:lowercase; font-weight:700; }
-  .lbtn { color:rgba(8,8,8,0.55); text-decoration:none; }
-  .lbtn:hover { color:#080808; }
-  .lbtn.active { color:#080808; font-weight:700; text-decoration:underline; }
+  .lbtn { color:rgba(232,228,220,0.6); text-decoration:none; }
+  .lbtn:hover { color:#ffffff; }
+  .lbtn.active { color:#ffffff; font-weight:700; text-decoration:underline; }
 
   #stage { position:fixed; inset:0; display:flex; align-items:center; }
   #track {
@@ -42,17 +43,16 @@
     width:min(78vw,860px);
     transition:opacity .35s ease, transform .35s ease;
   }
-  .slide img { width:100%; height:auto; display:block; box-shadow:0 18px 50px rgba(0,0,0,0.12); }
+  .slide img { width:100%; height:auto; display:block; box-shadow:0 0 50px rgba(255,255,255,0.08); }
 
   .navbtn {
     position:fixed; top:50%; transform:translateY(-50%); z-index:8;
     width:44px; height:44px; border-radius:50%;
-    background:rgba(255,255,255,0.9); border:1px solid rgba(8,8,8,0.25);
+    background:rgba(255,255,255,0.85); border:1px solid rgba(255,255,255,0.4);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
     transition:all .25s;
   }
-  .navbtn:hover { background:#080808; border-color:#080808; }
-  .navbtn:hover span { border-color:#ffffff; }
+  .navbtn:hover { background:#ffffff; border-color:#ffffff; }
   .navbtn span { display:block; width:9px; height:9px; border-left:1.5px solid #080808; border-bottom:1.5px solid #080808; transition:border-color .25s; }
   #prevBtn { left:1.2rem; }
   #prevBtn span { transform:rotate(45deg); margin-left:3px; }
@@ -90,9 +90,8 @@
 
 <script>
   const FILES = [
-    "pini-01.jpg","pini-02.jpg","pini-03.jpg","pini-04.jpg","pini-05.jpg","pini-06.jpg",
-    "pini-07.jpg","pini-08.jpg","pini-09.jpg","pini-10.jpg","pini-11.jpg","pini-12.jpg",
-    "pini-13.jpg","pini-14.jpg","pini-15.jpg","pini-16.jpg","pini-17.jpg","pini-18.jpg"
+    "pini-03.jpg","pini-04.jpg","pini-01.jpg","pini-02.jpg","pini-05.jpg",
+    "pini-06.jpg","pini-07.jpg","pini-08.jpg","pini-09.jpg"
   ];
   const N = FILES.length;
   const SETS = 3;
